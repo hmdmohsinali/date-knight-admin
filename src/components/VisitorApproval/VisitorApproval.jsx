@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaRegUserCircle } from "react-icons/fa";
 import { BarChart, Bar, ResponsiveContainer } from 'recharts';
 import ApprovalSheet from '../Sheet/ApprovalSheet';
@@ -94,33 +94,44 @@ const VisitorApproval = ({ onProfileClick }) => {
 
   const handleProfileClick = (profile) => {
     const profileContent = (
-     <>
-      
+      <>
 
-      <div>
-        <div>Name:</div>
-        <div>{profile.name}</div>
-        <br/>
-        <div>Email:</div>
-        <div>{profile.email}</div>
-      </div>
-      <div>
-         {profile.details && (
-          <>
-          <div>Location:</div>
-          <div>{profile.details.location}</div>
-          <br/>
-         <div>Last Name:</div>
-         <div>{profile.details.lastname}</div> 
-          </>
-         )}
-      </div>
-      
 
-</>
+        <div>
+          <div>Name:</div>
+          <div>{profile.name}</div>
+          <br />
+          <div>Email:</div>
+          <div>{profile.email}</div>
+        </div>
+        <div>
+          {profile.details && (
+            <>
+              <div>Location:</div>
+              <div>{profile.details.location}</div>
+              <br />
+              <div>Last Name:</div>
+              <div>{profile.details.lastname}</div>
+            </>
+          )}
+        </div>
+
+
+      </>
 
     );
     onProfileClick(profileContent);
+  };
+
+  const [showLogout, setShowLogout] = useState(false);
+
+  const toggleLogout = () => {
+    setShowLogout(prevShowLogout => !prevShowLogout);
+  };
+
+  const handleLogout = () => {
+
+    console.log("Logged out");
   };
 
 
@@ -128,16 +139,30 @@ const VisitorApproval = ({ onProfileClick }) => {
     <div className='px-8 py-4'>
 
       {/*Header  */}
-      <div className='flex items-center h-10 justify-between py-6 ' >
-        <h2 className='font-extrabold text-2xl text-[#FFA764] '>VisitorApproval</h2>
-        <FaRegUserCircle className='text-[#FFA764] text-xl' />
+      <div className='flex items-center h-10 justify-between py-6'>
+        <h2 className='font-extrabold text-2xl text-[#FFA764]'>VisitorApproval</h2>
+        <div className="relative">
+          <FaRegUserCircle
+            className='text-[#FFA764] text-xl cursor-pointer'
+            onClick={toggleLogout}
+          />
+          {showLogout && (
+            <button
+              onClick={handleLogout}
+              className="absolute right-0 mt-2 bg-[#FFA768] text-[white] p-2 rounded shadow-lg"
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </div>
+
 
       {/*DashBoard heading */}
       <h3 className='text-2xl text-[#FFA764] font-normal '>Dashboard</h3>
 
       {/*charts div */}
-      <div className='w-[100%] flex gap-10 h-[250px] mt-6'>
+      <div className='w-[100%] flex gap-10 h-[250px] mt-6 '>
 
         {/*1st barchart */}
         <div className='p-6 rounded-md border-2 border-gray-700 w-[50%]'>
