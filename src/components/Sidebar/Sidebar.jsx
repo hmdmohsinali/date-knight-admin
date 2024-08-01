@@ -10,8 +10,8 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
       <div onClick={toggleSideBar} className={`text-2xl md:hidden absolute top-1 left-2 z-10 `}>
         <IoMenu />
       </div>
-      <div className={`w-[230px] bg-[#FFA764] p-2 md:p-4 h-screen transition duration-3000 ease-in-out  ${isOpen ? 'translate-x-0' : 'hidden'} md:block `}>
-        <div className='mb-8 flex justify-center'>
+      <div className={`w-[230px] bg-[#FFA764] p-2 md:p-4 min-h-screen h-[100%]  transition duration-3000 ease-in-out  ${isOpen ? 'translate-x-0' : 'hidden'} md:block `}>
+        <div className='mb-8 flex justify-center items-center'>
           <img src={logoipsum} alt="Logo" />
         </div>
         <div className='w-[100%]'>
@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='/'
                 className={({ isActive }) =>
-                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md' : 'text-black'
+                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md' : 'text-white md:font-normal md:text-xl p-2 rounded-md w-[100%] whitespace-nowrap'
                 }
               >
                 Visitor Approval
@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='candidate-approval'
                 className={({ isActive }) =>
-                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md ' : 'text-black'
+                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md ' : 'text-white md:font-normal md:text-xl w-[100%] rounded-md p-2 whitespace-nowrap'
                 }
               >
                 Candidate Approval
@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='manage-event'
                 className={({ isActive }) =>
-                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md' : 'text-black'
+                  isActive ? 'text-[#FFA768] p-2 whitespace-nowrap bg-gray-50 rounded-md font-light text-sm md:font-normal md:text-xl' : 'text-white  md:font-normal md:text-xl w-[100%] rounded-md p-2 whitespace-nowrap'
                 }
               >
                 Manage Events
@@ -50,7 +50,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='manage-winner'
                 className={({ isActive }) =>
-                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md' : 'text-black'
+                  isActive ? 'text-[#FFA768] p-2 whitespace-nowrap bg-gray-50 rounded-md font-light text-sm md:font-normal md:text-xl' : 'text-white  md:font-normal md:text-xl w-[100%] rounded-md p-2 whitespace-nowrap'
                 }
               >
                 Manage Winner

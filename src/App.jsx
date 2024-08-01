@@ -30,9 +30,10 @@ const App = () => {
   return (
     <>
     
-      <div className={`flex h-screen ${isPopupVisible ? 'blur-sm' : ''}`}>
-        <Sidebar toggleSideBar={toggleSideBar} isOpen={isOpen}   />
-        <div className="max-w-[100%] w-[1050px] overflow-auto">
+      <div className={`flex  h-screen ${isPopupVisible ? 'blur-sm' : ''}`}>
+        <Sidebar toggleSideBar={toggleSideBar} isOpen={isOpen} />
+        
+        <div className="max-w-[100%] w-[1050px] overflow-auto flex-auto  ">
           <Routes>
             <Route path="/" element={<Body />}>
               <Route index element={<VisitorApproval  onProfileClick={handleProfileClick} />} />
@@ -42,7 +43,8 @@ const App = () => {
             </Route>
           </Routes>
         </div>
-      </div>
+        </div>
+      
       {isPopupVisible && (
         <ProfilePopup closePopup={closePopup}>
           {popupContent}
