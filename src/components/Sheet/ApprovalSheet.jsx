@@ -33,6 +33,63 @@ const data = [
         
       },
   },
+  {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    profile:'view profile',
+    Approve: <BsToggleOn />,
+    Action:<IoBan />,
+    banPeriod: '7 days',
+    details:
+      {
+        location:'la',
+        lastname:'no',
+
+      }
+  },
+  {
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    profile:<button>veiw profile</button>,
+    Approve: <BsToggleOn />,
+    Action:<IoBan />,
+    banPeriod: '30 days',
+    details:
+      {
+        location:'USA,Washington',
+        lastname:'smith',
+        
+      },
+  },
+  {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    profile:'view profile',
+    Approve: <BsToggleOn />,
+    Action:<IoBan />,
+    banPeriod: '7 days',
+    details:
+      {
+        location:'la',
+        lastname:'no',
+
+      }
+  },
+  {
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    profile:<button>veiw profile</button>,
+    Approve: <BsToggleOn />,
+    Action:<IoBan />,
+    banPeriod: '30 days',
+    details:
+      {
+        location:'USA,Washington',
+        lastname:'smith',
+        
+      },
+  },
+
   // Add more objects as needed
 ];
 
