@@ -67,7 +67,7 @@ export default function ModalPicker() {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Choose your birthday
+                    Choose Ban Period
                   </Dialog.Title>
                   <div className="mt-2">
                     <Picker
