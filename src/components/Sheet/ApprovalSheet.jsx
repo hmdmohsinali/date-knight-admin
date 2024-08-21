@@ -1,83 +1,62 @@
 import React, { useState } from 'react';
 import { FaCircleExclamation } from "react-icons/fa6";
-import { BsTicketDetailed, BsToggleOn, BsToggleOff } from "react-icons/bs";
+import { BsToggleOn, BsToggleOff } from "react-icons/bs";
 import { IoBan } from 'react-icons/io5';
 import Picker from 'react-mobile-picker-scroll';
-
 import './ApprovalSheet.css';
 
 const data = [
   {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profile: 'view profile',
-    Approve: <BsToggleOn />,
+    name: 'Janice Han',
+    email: 'janicehan@gmail.com',
+    profile: 'View Profile',
+    Contestant: false,
+    Approve: true,
     Action: <IoBan />,
-    banPeriod: '7 days',
+    banPeriod: '5 Months',
   },
   {
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    profile: <button>view profile</button>,
-    Approve: <BsToggleOn />,
+    name: 'Name 2',
+    email: 'name@two.com',
+    profile: 'View Profile',
+    Contestant: false,
+    Approve: true,
     Action: <IoBan />,
-    banPeriod: '30 days',
+    banPeriod: '10 Years',
   },
   {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profile: 'view profile',
-    Approve: <BsToggleOn />,
+    name: 'Name 3',
+    email: 'name@three.com',
+    profile: 'View Profile',
+    Contestant: false,
+    Approve: true,
     Action: <IoBan />,
-    banPeriod: '7 days',
-  },
-  {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profile: 'view profile',
-    Approve: <BsToggleOn />,
-    Action: <IoBan />,
-    banPeriod: '7 days',
-  },
-  {
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    profile: <button>view profile</button>,
-    Approve: <BsToggleOn />,
-    Action: <IoBan />,
-    banPeriod: '30 days',
-  },
-  {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    profile: 'view profile',
-    Approve: <BsToggleOn />,
-    Action: <IoBan />,
-    banPeriod: '7 days',
+    banPeriod: '15 Years',
   },
 ];
 
-const Table = ({ onProfileClick, span }) => {
-
+const Table = ({ onProfileClick }) => {
   const [toggleStates, setToggleStates] = useState(
-    data.reduce((acc, _, index) => {
-      acc[index] = true; // Initialize each toggle state to true
-      return acc;
-    }, {})
+    data.map((item) => ({
+      Contestant: item.Contestant || false,
+      Approve: item.Approve || false,
+      banPeriod: item.banPeriod,
+    }))
   );
 
-  const [showPicker, setShowPicker] = useState(null); // State to control date picker visibility
-  const [selectedDate, setSelectedDate] = useState({ year: '2023', month: '01', day: '01' });
+  const [showPicker, setShowPicker] = useState(null);
+  const [selectedDate, setSelectedDate] = useState({ year: '10', month: '0', day: '5' });
 
-  const handleClick = (index) => {
-    setToggleStates((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
+  const handleToggleChange = (index, field) => {
+    setToggleStates((prevState) => {
+      const newState = [...prevState];
+      newState[index][field] = !newState[index][field];
+      return newState;
+    });
   };
 
   const handleBanClick = (index) => {
-    setShowPicker(index); // Show date picker under the clicked icon
+    setShowPicker(index); 
   };
 
   const handleDateChange = (name, value) => {
@@ -88,59 +67,67 @@ const Table = ({ onProfileClick, span }) => {
   };
 
   const handleSetDate = (index) => {
-    data[index].banPeriod = `${selectedDate.year} Years ${selectedDate.month} Months ${selectedDate.day} Days`;
-    setShowPicker(null); // Hide date picker after setting the date
+    const formattedDate = `${selectedDate.year} Years ${selectedDate.month} Months ${selectedDate.day} Days`;
+    setToggleStates((prevState) => {
+      const newState = [...prevState];
+      newState[index].banPeriod = formattedDate;
+      return newState;
+    });
+    setShowPicker(null); 
   };
 
   return (
     <div className='py-4 relative'>
       <div className='overflow-x-auto rounded-lg border-gray-500'>
-        <table className='w-full  bg-white border-collapse'>
+        <table className='w-full bg-white border-collapse'>
           <thead className='bg-[#FFA768] text-white rounded-lg h-10'>
             <tr>
-              <th className='w-[20%]  px-3 uppercase font-semibold text-sm'>Name</th>
-              <th className='w-[25%]  px-3 uppercase font-semibold text-sm'>Email</th>
-              <th className='w-[20%]  px-3 uppercase font-semibold text-sm'>Profile</th>
-              <th className='w-[16%]  px-2 uppercase font-semibold text-sm'>Approve</th>
-              <th className='w-[20%]  px-3 uppercase font-semibold text-sm whitespace-nowrap action'>Action
+              <th className='px-3 uppercase font-semibold text-sm'>Name</th>
+              <th className='px-3 uppercase font-semibold text-sm'>Email</th>
+              <th className='px-3 uppercase font-semibold text-sm'>Contestant?</th>
+              <th className='px-3 uppercase font-semibold text-sm'>Approve</th>
+              <th className='px-3 uppercase font-semibold text-sm whitespace-nowrap action'>
+                Action
                 <div className='inline-block ml-2'>
                   <FaCircleExclamation />
                 </div>
-                {span}
               </th>
-              <th className='w-[23%]  px-3 uppercase font-semibold text-sm whitespace-nowrap'>Ban Period</th>
+              <th className='px-3 uppercase font-semibold text-sm whitespace-nowrap'>Ban Period</th>
             </tr>
           </thead>
           <tbody className='text-gray-700'>
             {data.map((item, index) => (
               <tr key={index} className='rows'>
-                <td className='w-[20%] py-2 px-4'>{item.name}</td>
-                <td className='w-[25%] py-2 px-4'>{item.email}</td>
-                <td className='w-[20%] py-2 px-4'>
-                  <button onClick={() => onProfileClick(item)}>{item.profile} </button>
-                </td>
-
-                <td className='w-[16%] py-2 px-14 text-2xl text-[#892525] ' onClick={() => handleClick(index)}>
-                  {toggleStates[index] ? (
-                    <BsToggleOn className='text-brown transition-colors duration-300' />
+                <td className='py-2 px-4'>{item.name}</td>
+                <td className='py-2 px-4'>{item.email}</td>
+                <td className='py-2 px-4 text-2xl' onClick={() => handleToggleChange(index, 'Contestant')}>
+                  {toggleStates[index].Contestant ? (
+                    <BsToggleOn className='text-[#FFA768] transition-colors duration-300' />
                   ) : (
                     <BsToggleOff className='text-gray-500 transition-colors duration-300' />
                   )}
                 </td>
-                <td className='w-[20%] py-2 pl-6 relative' onClick={() => handleBanClick(index)}>
+                <td className='py-2 px-4 text-2xl' onClick={() => handleToggleChange(index, 'Approve')}>
+                  {toggleStates[index].Approve ? (
+                    <BsToggleOn className='text-[#FFA768] transition-colors duration-300' />
+                  ) : (
+                    <BsToggleOff className='text-gray-500 transition-colors duration-300' />
+                  )}
+                </td>
+                <td className='py-2 px-4 relative' onClick={() => handleBanClick(index)}>
                   {item.Action}
                   {showPicker === index && (
-                    <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-lg p-4 z-10 w-64">
-                      <div className="flex justify-between">
+                    <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-lg p-4 z-10 w-[180px]">
+                      <div className="flex justify-between text-sm">
                         <span className="font-bold text-orange-500">Years</span>
                         <span className="font-bold text-orange-500">Months</span>
                         <span className="font-bold text-orange-500">Days</span>
                       </div>
                       <Picker
                         optionGroups={{
-                          year: ['2023', '2024', '2025'],
-                          month: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-                          day: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+                          year: ['10', '15', '20'],
+                          month: ['0', '5', '10', '15'],
+                          day: ['1', '2', '3', '4', '5', '6', '7'],
                         }}
                         valueGroups={selectedDate}
                         onChange={handleDateChange}
@@ -152,7 +139,7 @@ const Table = ({ onProfileClick, span }) => {
                     </div>
                   )}
                 </td>
-                <td className='w-[23%] py-2 pl-16'>{item.banPeriod}</td>
+                <td className='py-2 px-4'>{toggleStates[index].banPeriod}</td>
               </tr>
             ))}
           </tbody>
