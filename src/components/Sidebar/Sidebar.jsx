@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
         <div className='mb-10 flex justify-center items-center'>
           <img src={logoipsum} alt="Logo" className="h-12 w-auto"/>
         </div>
-        <ul className='space-y-6'>
+        <ul className='space-y-2'>
           <li>
             <NavLink
               to='/'
