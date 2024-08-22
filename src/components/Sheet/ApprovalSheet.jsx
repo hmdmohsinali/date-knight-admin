@@ -79,7 +79,7 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">
                   <a
                     href="#"
-                    className="text-blue-500 underline"
+                    className=""
                     onClick={() => handleViewProfile(item)}
                   >
                     {item.profile}
