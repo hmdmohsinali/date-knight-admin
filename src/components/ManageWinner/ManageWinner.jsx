@@ -1,46 +1,127 @@
-import React,{useState} from 'react'
-import { FaRegUserCircle } from "react-icons/fa";
-import Winnersheet from '../Sheet/Winnersheet';
+import React, { useState } from "react";
+import { FaUserCircle } from "react-icons/fa";
 
 const ManageWinner = () => {
+  const [events, setEvents] = useState([
+    {
+      id: 24,
+      challenger: "Joey Tribbs",
+      opponent: "Chan Bing",
+      date: "24-08-2000",
+      status: "Completed",
+      winner: "Joey Tribbs",
+      winnerOptions: ["Joey Tribbs", "Chan Bing"],
+      statusOptions: ["Completed", "Tied"],
+    },
+    {
+      id: 18,
+      challenger: "Name 2",
+      opponent: "Name 2",
+      date: "24-08-2000",
+      status: "Tied",
+      winner: "Pending",
+      winnerOptions: ["Name 2", "Name 2"],
+      statusOptions: ["Completed", "Tied"],
+    },
+    {
+      id: 8,
+      challenger: "Name 3",
+      opponent: "Name 3",
+      date: "24-08-2000",
+      status: "Tied",
+      winner: "Pending",
+      winnerOptions: ["Name 3", "Name 3"],
+      statusOptions: ["Completed", "Tied"],
+    },
+  ]);
 
-    const [showLogout, setShowLogout] = useState(false);
-
-  const toggleLogout = () => {
-    setShowLogout(prevShowLogout => !prevShowLogout);
+  const handleWinnerChange = (e, index) => {
+    const newEvents = [...events];
+    newEvents[index].winner = e.target.value;
+    setEvents(newEvents);
   };
 
-  const handleLogout = () => {
-
-    console.log("Logged out");
+  const handleStatusChange = (e, index) => {
+    const newEvents = [...events];
+    newEvents[index].status = e.target.value;
+    setEvents(newEvents);
   };
-    return (
-        <div className='px-8 py-4'>
 
-            
-      {/*Header  */}
-      <div className='flex items-center h-10 justify-between py-6'>
-        <h2 className='font-extrabold text-2xl text-[#FFA764]'>VisitorApproval</h2>
-        <div className="relative">
-          <FaRegUserCircle
-            className='text-[#FFA764] text-xl cursor-pointer'
-            onClick={toggleLogout}
-          />
-          {showLogout && (
-            <button
-              onClick={handleLogout}
-              className="absolute right-0 mt-2 bg-[#FFA768] text-[white] p-2 rounded shadow-lg"
-            >
-              Logout
-            </button>
-          )}
-        </div>
+  return (
+    <div className="p-6 md:p-8 shadow-lg rounded-xl overflow-hidden max-w-full mx-auto mt-10">
+      <h1 className="text-3xl font-bold text-orange-400 mb-6 ">
+        Manage Winner
+      </h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white rounded-xl text-sm md:text-base">
+          <thead>
+            <tr className="bg-[#FFA768]">
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                ID
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                CHALLENGER
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                OPPONENT
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                EVENT DATE
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                EVENT STATUS
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+                WINNER
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {events.map((event, index) => (
+              <tr key={event.id} className="border-b last:border-b-0">
+                <td className="py-3 px-4 border-r">{event.id}</td>
+                <td className="py-3 px-4 border-r">{event.challenger}</td>
+                <td className="py-3 px-4 border-r">{event.opponent}</td>
+                <td className="py-3 px-4 border-r">{event.date}</td>
+                <td className="py-3 px-4 border-r">
+                  <select
+                    value={event.status}
+                    onChange={(e) => handleStatusChange(e, index)}
+                    className={`select w-full select-xs max-w-xs text-sm ${
+                      event.status === "Completed"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {event.statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="py-3 px-4">
+                  <select
+                    value={event.winner}
+                    onChange={(e) => handleWinnerChange(e, index)}
+                    className="select select-xs w-full max-w-xs text-sm bg-gray-100 border-gray-300"
+                  >
+                    {event.winnerOptions.map((winner) => (
+                      <option key={winner} value={winner}>
+                        {winner}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-            {/*DashBoard heading */}
-           <h3 className='text-2xl text-[#FFA764] font-normal '>Dashboard</h3>
-           <Winnersheet/>
-        </div>
-    )
-}
+      <div className="mt-6 text-center">
+      </div>
+    </div>
+  );
+};
 
-export default ManageWinner
+export default ManageWinner;

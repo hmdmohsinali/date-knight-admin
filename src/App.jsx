@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Body from './components/Body/Body';
 import VisitorApproval from './components/VisitorApproval/VisitorApproval';
-import CandidateApproval from './components/CandidateApproval/CandidateApproval';
 import ManageEvent from './components/ManageEvent/ManageEvent';
 import ProfilePopup from './components/ProfilePopup/ProfilePopup';
 import ManageWinner from './components/ManageWinner/ManageWinner';
@@ -37,7 +36,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Body />}>
               <Route index element={<VisitorApproval  onProfileClick={handleProfileClick} />} />
-              <Route path="candidate-approval" element={<CandidateApproval onProfileClick={handleProfileClick} />} />
               <Route path="manage-event" element={<ManageEvent />} />
               <Route path="manage-winner" element={<ManageWinner />} />
             </Route>

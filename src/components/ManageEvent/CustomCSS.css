@@ -1,10 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .custom-calendar .react-datepicker__current-month {
     color: orange;
     font-weight: bold;
+    
   }
   
   .custom-calendar .react-datepicker__day--selected,
@@ -30,3 +27,16 @@
   .custom-calendar .react-datepicker__month-container {
     border-color: orange;
   }
+  /* Custom scrollbar style */
+.select-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.select-dropdown::-webkit-scrollbar-thumb {
+  background-color: #FFA500; /* Orange */
+  border-radius: 4px;
+}
+
+.select-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}

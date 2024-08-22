@@ -28,16 +28,6 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
             </li>
             <li>
               <NavLink
-                to='candidate-approval'
-                className={({ isActive }) =>
-                  isActive ? 'text-[#FFA768] font-light text-sm md:font-normal md:text-xl whitespace-nowrap bg-gray-50 p-2 w-[100%] rounded-md ' : 'text-white md:font-normal md:text-xl w-[100%] rounded-md p-2 whitespace-nowrap'
-                }
-              >
-                Candidate Approval
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
                 to='manage-event'
                 className={({ isActive }) =>
                   isActive ? 'text-[#FFA768] p-2 whitespace-nowrap bg-gray-50 rounded-md font-light text-sm md:font-normal md:text-xl' : 'text-white  md:font-normal md:text-xl w-[100%] rounded-md p-2 whitespace-nowrap'
