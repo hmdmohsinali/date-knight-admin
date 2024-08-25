@@ -26,6 +26,16 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
           </li>
           <li>
             <NavLink
+              to='/invite-candidate'
+              className={({ isActive }) =>
+                `block py-3 px-4 text-lg font-medium rounded-lg transition-colors duration-300 ${isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FF7B50] hover:bg-opacity-80'}`
+              }
+            >
+              Invite Candidate
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to='/manage-event'
               className={({ isActive }) =>
                 `block py-3 px-4 text-lg font-medium rounded-lg transition-colors duration-300 ${isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FF7B50] hover:bg-opacity-80'}`

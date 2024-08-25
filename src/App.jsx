@@ -6,6 +6,7 @@ import VisitorApproval from './components/VisitorApproval/VisitorApproval';
 import ManageEvent from './components/ManageEvent/ManageEvent';
 import ProfilePopup from './components/ProfilePopup/ProfilePopup';
 import ManageWinner from './components/ManageWinner/ManageWinner';
+import InviteCandidate from './components/InviteCandidate/InviteCandidate';
 
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Body />}>
               <Route index element={<VisitorApproval  onProfileClick={handleProfileClick} />} />
+              <Route path="invite-candidate" element={<InviteCandidate/>} />
               <Route path="manage-event" element={<ManageEvent />} />
               <Route path="manage-winner" element={<ManageWinner />} />
             </Route>
