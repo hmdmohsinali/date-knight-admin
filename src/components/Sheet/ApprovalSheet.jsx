@@ -52,7 +52,7 @@ const ManageCandidate = () => {
   };
 
   return (
-    <div className="py-4 relative">
+    <div className="py-4 ">
       <div className="overflow-x-auto rounded-lg border-gray-300">
         <table className="w-full bg-white border-collapse text-center">
           <thead className="bg-[#FFA768] text-white rounded-lg h-12">

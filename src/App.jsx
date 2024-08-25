@@ -36,7 +36,7 @@ const App = () => {
         <div className="max-w-[100%] w-[1050px] overflow-auto flex-auto  ">
           <Routes>
             <Route path="/" element={<Body />}>
-              <Route index element={<VisitorApproval  onProfileClick={handleProfileClick} />} />
+              <Route path='/' element={<VisitorApproval   />} />
               <Route path="invite-candidate" element={<InviteCandidate/>} />
               <Route path="manage-event" element={<ManageEvent />} />
               <Route path="manage-winner" element={<ManageWinner />} />
