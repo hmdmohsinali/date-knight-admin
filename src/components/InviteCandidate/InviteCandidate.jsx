@@ -6,8 +6,8 @@ const InviteCandidate = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className=" p-6 rounded-lg shadow-md">
-      <h2 className="text-3xl font-bold text-orange-500 mb-6 text-left">
+    <div className=" p-6 md:p-8 rounded-lg shadow-md">
+      <h2 className="text-3xl mt-6 font-bold text-orange-500 mb-6 text-left">
         Invite Candidate
       </h2>
 

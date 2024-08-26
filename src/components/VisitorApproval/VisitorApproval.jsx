@@ -140,7 +140,7 @@ const VisitorApproval = ({ onProfileClick }) => {
 
       {/*Header  */}
       <div className='flex items-center h-10 justify-between py-6'>
-        <h2 className='font-extrabold text-2xl text-[#FFA764]'>VisitorApproval</h2>
+        <h2 className='font-extrabold text-2xl text-[#FFA764] mt-10 '>Visitor Approval</h2>
         <div className="relative">
           <FaRegUserCircle
             className='text-[#FFA764] text-xl cursor-pointer'
@@ -159,7 +159,7 @@ const VisitorApproval = ({ onProfileClick }) => {
 
 
       {/*DashBoard heading */}
-      <h3 className='text-2xl text-[#FFA764] font-normal '>Dashboard</h3>
+      <h3 className='text-2xl text-[#FFA764] font-normal mt-6 '>Dashboard</h3>
 
       {/*charts div */}
       <div className='w-[100%] flex gap-10 h-[250px] mt-6 '>

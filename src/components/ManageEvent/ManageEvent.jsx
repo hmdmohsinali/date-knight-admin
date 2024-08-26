@@ -91,7 +91,7 @@ const ManageEvents = () => {
 
   return (
     <div className="p-6 md:p-8 shadow-lg rounded-xl overflow-hidden">
-      <h1 className="text-2xl md:text-3xl font-bold text-orange-400 mb-6 rounded-t-xl ">
+      <h1 className="text-3xl font-bold text-orange-400 mt-8 mb-6 rounded-t-xl ">
         Manage Event
       </h1>
       <div className="overflow-x-auto">
