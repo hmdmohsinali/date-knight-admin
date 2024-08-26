@@ -33,7 +33,7 @@ const App = () => {
       <div className={`flex  h-screen ${isPopupVisible ? 'blur-sm' : ''}`}>
         <Sidebar toggleSideBar={toggleSideBar} isOpen={isOpen} />
         
-        <div className="max-w-[100%] w-[1050px] overflow-auto flex-auto  ">
+        <div className="max-w-[100%] w-[1050px]  flex-auto scrollable-container ">
           <Routes>
             <Route path="/" element={<Body />}>
               <Route path='/' element={<VisitorApproval   />} />

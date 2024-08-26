@@ -73,8 +73,8 @@ const ManageCandidate = () => {
   };
 
   return (
-    <div className="py-4">
-      <div className="overflow-x-auto rounded-lg border-gray-300">
+    <div className="py-4 scrollable-container">
+      <div className=" rounded-lg border-gray-300">
         <table className="w-full bg-white border-collapse text-center">
           <thead className="bg-[#FFA768] text-white rounded-lg h-12">
             <tr>
@@ -109,7 +109,7 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">
                   <input 
                     type="checkbox" 
-                    className="toggle toggle-md toggle-warning" 
+                    className="toggle toggle-md checked:bg-orange-500" 
                     checked={item.contestant} 
                     onChange={() => handleToggleChange(index, 'contestant')} 
                   />
@@ -117,7 +117,7 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">
                   <input 
                     type="checkbox" 
-                    className="toggle toggle-md toggle-warning" 
+                    className="toggle toggle-md  checked:bg-[#ff8956]" 
                     checked={item.approve} 
                     onChange={() => handleToggleChange(index, 'approve')} 
                   />

@@ -93,3 +93,28 @@
     border-color: #FFA764;
   }
   
+/* Targeting a specific scrollable container */
+.scrollable-container {
+  overflow-y: auto; /* Ensure the container is scrollable */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ff8956 #f1f1f1; /* For Firefox */
+}
+
+/* Webkit-based browsers (Chrome, Safari, Edge) */
+.scrollable-container::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background-color: #ff8956; /* Primary color for the scrollbar */
+  border-radius: 10px; /* Rounded edges */
+  border: 2px solid #f1f1f1; /* Border around the scrollbar thumb */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+  background-color: #ff6a33; /* Darker shade when hovered */
+}
