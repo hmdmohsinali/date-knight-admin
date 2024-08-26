@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import logoipsum from '../../assets/logoipsum.png';
+import logoipsum from '../../assets/logoipsum.svg';
 import { IoMenu, IoClose } from "react-icons/io5";
 
 const Sidebar = ({ isOpen, toggleSideBar }) => {
@@ -22,8 +22,8 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
         } md:translate-x-0 md:static md:inset-0 md:transition-none`}
       >
         {/* Logo */}
-        <div className='mb-10 flex justify-center items-center'>
-          <img src={logoipsum} alt="Logo" className="h-12 w-auto"/>
+        <div className='mb-6 mt-10 flex justify-center items-center'>
+          <img src={logoipsum} alt="Logo" className=""/>
         </div>
 
         {/* Navigation Links */}
