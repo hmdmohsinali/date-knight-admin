@@ -1,102 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { FaRegUserCircle } from "react-icons/fa";
-import { BarChart, Bar, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ApprovalSheet from '../Sheet/ApprovalSheet';
 
 const VisitorApproval = ({ onProfileClick }) => {
-  const data = [
-    {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
+  const weeklyData = [
+    { day: 'Mon', signups: 75 },
+    { day: 'Tue', signups: 125 },
+    { day: 'Wed', signups: 100 },
+    { day: 'Thu', signups: 50 },
+    { day: 'Fri', signups: 150 },
+    { day: 'Sat', signups: 175 },
+    { day: 'Sun', signups: 200 },
+  ];
 
+  const monthlyData = [
+    { month: 'Jan', signups: 800 },
+    { month: 'Feb', signups: 1200 },
+    { month: 'Mar', signups: 1500 },
+    { month: 'Apr', signups: 1800 },
+    { month: 'May', signups: 2000 },
+    { month: 'Jun', signups: 2300 },
+    { month: 'Jul', signups: 2600 },
+    { month: 'Aug', signups: 3000 },
+    { month: 'Sep', signups: 2800 },
+    { month: 'Oct', signups: 3200 },
+    { month: 'Nov', signups: 3400 },
+    { month: 'Dec', signups: 4000 },
   ];
 
   const handleProfileClick = (profile) => {
     const profileContent = (
       <>
-
-
         <div>
           <div>Name:</div>
           <div>{profile.name}</div>
@@ -115,10 +50,7 @@ const VisitorApproval = ({ onProfileClick }) => {
             </>
           )}
         </div>
-
-
       </>
-
     );
     onProfileClick(profileContent);
   };
@@ -130,14 +62,11 @@ const VisitorApproval = ({ onProfileClick }) => {
   };
 
   const handleLogout = () => {
-
     console.log("Logged out");
   };
 
-
   return (
     <div className='px-8 py-4'>
-
       {/*Header  */}
       <div className='flex items-center h-10 justify-between py-6'>
         <h2 className='font-extrabold text-2xl text-[#FFA764] mt-10 '>Visitor Approval</h2>
@@ -157,29 +86,53 @@ const VisitorApproval = ({ onProfileClick }) => {
         </div>
       </div>
 
-
-      {/*DashBoard heading */}
+      {/*Dashboard heading */}
       <h3 className='text-2xl text-[#FFA764] font-normal mt-6 '>Dashboard</h3>
 
       {/*charts div */}
-      <div className='w-[100%] flex gap-10 h-[250px] mt-6 '>
-
-        {/*1st barchart */}
-        <div className='p-6 rounded-md border-2 border-gray-700 w-[50%]'>
-
+      <div className='w-[100%] flex gap-10 h-[250px] mt-6'>
+        <div style={{
+          backgroundColor: '#f8f5f0',
+          borderRadius: '15px',
+          padding: '20px',
+          width: '50%',
+          height: '100%',
+        }}>
+          <h4 className='text-center text-lg font-semibold mb-4'>Total Signups This Week</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart width={150} height={40} data={data}>
-              <Bar dataKey="uv" fill="#8884d8" />
+            <BarChart
+              data={weeklyData}
+              margin={{ top: 20, right: 30, left: 0, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" tick={{ fontSize: 14 }} />
+              <YAxis tick={{ fontSize: 14 }} />
+              <Tooltip />
+              <Legend wrapperStyle={{ top: -20 }} />
+              <Bar dataKey="signups" fill="#8B4513" barSize={10} radius={[10, 10, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        {/*2nd barchart */}
 
-        <div className='p-6 rounded-md border-2 border-gray-700 w-[50%]'>
-
+        <div style={{
+          backgroundColor: '#f8f5f0',
+          borderRadius: '15px',
+          padding: '20px',
+          width: '50%',
+          height: '100%',
+        }}>
+          <h4 className='text-center text-lg font-semibold mb-4'>Total Signups This Year</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart width={150} height={40} data={data}>
-              <Bar dataKey="uv" fill="#8884d8" />
+            <BarChart
+              data={monthlyData}
+              margin={{ top: 20, right: 30, left: 0, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" tick={{ fontSize: 14 }} />
+              <YAxis tick={{ fontSize: 14 }} />
+              <Tooltip />
+              <Legend wrapperStyle={{ top: -20 }} />
+              <Bar dataKey="signups" fill="#8B4513" barSize={10} radius={[10, 10, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -187,9 +140,8 @@ const VisitorApproval = ({ onProfileClick }) => {
 
       {/*Items Throught Object */}
       <ApprovalSheet onProfileClick={handleProfileClick} span={<span className='span'>Hey who are you Lorem ipsum dolor sit amet consectetur adipisicing elit. Id</span>} />
-
     </div>
-  )
+  );
 }
 
-export default VisitorApproval
+export default VisitorApproval;
