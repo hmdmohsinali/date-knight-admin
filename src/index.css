@@ -30,3 +30,66 @@
   .custom-calendar .react-datepicker__month-container {
     border-color: orange;
   }
+
+  .picker-container {
+    width: 100%;
+    max-width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    color: #FFA764;
+    margin-bottom: 20px;
+  }
+  
+  .picker-grid {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .picker-grid .picker-item {
+    flex: 1;
+    text-align: center;
+    color: #FF7B50;
+    font-size: 24px;
+  }
+  
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .cancel-btn, .set-btn {
+    font-size: 18px;
+    color: #FFA764;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cancel-btn:hover, .set-btn:hover {
+    color: #FF7B50;
+  }
+  
+  .picker-item {
+    color: #FFA764;
+  }
+  
+  .picker-item-selected {
+    color: #000;
+    font-weight: bold;
+    font-size: 28px;
+  }
+  
+  .picker-indicator {
+    border-color: #FFA764;
+  }
+  
