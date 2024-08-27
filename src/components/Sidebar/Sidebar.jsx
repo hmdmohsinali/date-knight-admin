@@ -1,9 +1,27 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logoipsum from '../../assets/logoipsum.svg';
 import { IoMenu, IoClose } from "react-icons/io5";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Sidebar = ({ isOpen, toggleSideBar }) => {
+  const navigate = useNavigate();
+
+  // Handle logout functionality
+
+  const handleLogout = async () => {
+    try {
+
+      localStorage.removeItem('token');
+      navigate('/sign-in');
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error(error)
+      
+    }
+  };
+
   return (
     <>
       {/* Mobile menu toggle button */}
@@ -77,6 +95,16 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
             </NavLink>
           </li>
         </ul>
+
+        {/* Logout Button */}
+        <div className="mt-10">
+          <button
+            onClick={handleLogout}
+            className="w-full py-3 px-4 text-lg font-medium text-white bg-red-500 rounded-lg transition-colors duration-300 hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Overlay for mobile */}
