@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { serverUrl } from '../../../api';
 
 const AcceptInvitation = () => {
   const [formData, setFormData] = useState({
@@ -40,7 +41,7 @@ const AcceptInvitation = () => {
     }
 
     try {
-      const response = await fetch('/api/accept-invitation', {
+      const response = await fetch(`${serverUrl}accept-invitation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
