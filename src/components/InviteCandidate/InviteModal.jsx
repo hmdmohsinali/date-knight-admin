@@ -26,7 +26,7 @@ const InviteModal = ({ isOpen, onClose }) => {
       setEmail(''); // Reset email input
       onClose();
       toast.success(`Invitation sent successfully to ${name}!`);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error('Error sending invitation:', error);
       setError('Failed to send invitation.'); // Set error message
