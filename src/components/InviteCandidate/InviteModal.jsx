@@ -26,6 +26,7 @@ const InviteModal = ({ isOpen, onClose }) => {
       setEmail(''); // Reset email input
       onClose();
       toast.success(`Invitation sent successfully to ${name}!`);
+      window.location.reload();
     } catch (error) {
       console.error('Error sending invitation:', error);
       setError('Failed to send invitation.'); // Set error message
@@ -36,7 +37,7 @@ const InviteModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-80 relative">
+      <div className="bg-white rounded-xl shadow-lg p-14 w-96 relative">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -46,12 +47,12 @@ const InviteModal = ({ isOpen, onClose }) => {
         </button>
 
         {/* Modal Content */}
-        <h2 className="text-center text-xl font-semibold text-orange-500 mb-8">
+        <h2 className="text-center text-2xl font-semibold text-orange-500 mb-8">
           Send an Invitation
         </h2>
 
         {/* Name Input */}
-        <div className="mb-5">
+        <div className="mb-8">
           <input
             type="text"
             className="block w-full bg-transparent border-b border-orange-300 focus:border-orange-500 outline-none placeholder-orange-300 text-base text-gray-800"

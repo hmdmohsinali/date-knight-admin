@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
-import InviteModal from './InviteModal'
+import React, { useState, useEffect } from 'react';
+import InviteModal from './InviteModal';
+import { serverUrl } from '../../../api';
 
 const InviteCandidate = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [invitations, setInvitations] = useState([]);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+
+    const fetchInvitations = async () => {
+      try {
+        const response = await fetch(`${serverUrl}getInvitations`); 
+        const data = await response.json();
+        setInvitations(data.invitations);
+      } catch (error) {
+        console.error('Error fetching invitations:', error);
+      }
+    };
+
+    fetchInvitations();
+  }, []);
 
   return (
-    <div className=" p-6 md:p-8 rounded-lg shadow-md">
+    <div className="p-6 md:p-8 rounded-lg shadow-md">
       <h2 className="text-3xl mt-6 font-bold text-orange-500 mb-6 text-left">
         Invite Candidate
       </h2>
@@ -22,52 +38,38 @@ const InviteCandidate = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b last:border-none">
-              <td className="py-3 px-6">Janice Han</td>
-              <td className="py-3 px-6">janicehan@gmail.com</td>
-              <td className="py-3 px-6 text-red-500">Pending</td>
-              <td className="py-3 px-6 text-orange-500">
-                <a href="#" className="hover:underline">
-                  View Profile
-                </a>
-              </td>
-            </tr>
-            <tr className="border-b last:border-none">
-              <td className="py-3 px-6">Name 2</td>
-              <td className="py-3 px-6">name@two.com</td>
-              <td className="py-3 px-6 text-green-500">Accepted</td>
-              <td className="py-3 px-6 text-orange-500">
-                <a href="#" className="hover:underline">
-                  View Profile
-                </a>
-              </td>
-            </tr>
-            <tr className="last:border-none">
-              <td className="py-3 px-6">Name 3</td>
-              <td className="py-3 px-6">name@three.com</td>
-              <td className="py-3 px-6 text-green-500">Accepted</td>
-              <td className="py-3 px-6 text-orange-500">
-                <a href="#" className="hover:underline">
-                  View Profile
-                </a>
-              </td>
-            </tr>
+            {invitations.map((invite, index) => (
+              <tr key={index} className="border-b last:border-none">
+                <td className="py-3 px-6">{invite.name}</td>
+                <td className="py-3 px-6">{invite.email}</td>
+                <td className={`py-3 px-6 ${invite.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
+                  {invite.status}
+                </td>
+                <td className="py-3 px-6 text-orange-500">
+                  {invite.profileLink ? (
+                    <a href={invite.profileLink} className="hover:underline">
+                      View Profile
+                    </a>
+                  ) : (
+                    'View Profile'
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
       <div className='flex justify-end mt-6'>
-      {/* Invite Button */}
-      <button
-        className="bg-orange-500 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-600"
-        onClick={() => setIsModalOpen(true)}
-      >
-        + Invite
-      </button>
+        <button
+          className="bg-orange-500 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-600"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Invite
+        </button>
 
-      
-      <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </div>
+        <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </div>
     </div>
   );
 };

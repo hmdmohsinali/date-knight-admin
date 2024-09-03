@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignIn from "./components/SignIn/SignIn";
 import RoutesProtection from "./components/RoutesProtection/RouteProtection";
+import AcceptInvitation from "./components/AcceptInvite/AcceptInvitation";
 
 const App = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -31,7 +32,7 @@ const App = () => {
         <div className="max-w-[100%] w-[1050px] flex-auto scrollable-container">
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
-
+            <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
             <Route element={<RoutesProtection />}>
               <Route element={<Body />}>
                 <Route path="/" element={<VisitorApproval />} />
