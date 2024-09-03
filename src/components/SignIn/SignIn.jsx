@@ -4,6 +4,7 @@ import axios from "axios";
 import login from '../../assets/login.png';
 import { Loader } from "../Loader/Loader";
 import { toast } from "react-toastify";
+import { serverUrl } from "../../../api";
 
 
 export default function SignIn() {
@@ -18,7 +19,7 @@ export default function SignIn() {
     setLoading(true); 
 
     try {
-      const response = await axios.post("https://date-knight-backend.vercel.app/admin/login", {
+      const response = await axios.post(`${serverUrl}login`, {
         email,
         password,
       });
@@ -64,7 +65,7 @@ export default function SignIn() {
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
                 />
               </div>
               <div>
@@ -78,7 +79,7 @@ export default function SignIn() {
                     type={showPassword ? "text" : "password"}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
                   />
                   <div
                     onClick={() => setShowPassword(!showPassword)}
@@ -128,7 +129,7 @@ export default function SignIn() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                 >
                   {loading ? <span>Loading...</span> : "Sign In"}
                 </button>
@@ -136,7 +137,7 @@ export default function SignIn() {
             </form>
             <p className="mt-6 text-center text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-indigo-600 hover:text-indigo-500">
+              <Link to="/signup" className="text-orange-600 hover:text-orange-500">
                 Sign up
               </Link>
             </p>
