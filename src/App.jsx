@@ -33,14 +33,14 @@ const App = () => {
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
-            <Route element={<RoutesProtection />}>
+            {/* <Route element={<RoutesProtection />}> */}
               <Route element={<Body />}>
                 <Route path="/" element={<VisitorApproval />} />
                 <Route path="invite-candidate" element={<InviteCandidate />} />
                 <Route path="manage-event" element={<ManageEvent />} />
                 <Route path="manage-winner" element={<ManageWinner />} />
               </Route>
-            </Route>
+            {/* </Route> */}
           </Routes>
         </div>
       </div>
