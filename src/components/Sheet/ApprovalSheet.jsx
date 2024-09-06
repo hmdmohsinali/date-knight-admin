@@ -1,59 +1,126 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoBan } from 'react-icons/io5';
 import { FaInfoCircle } from 'react-icons/fa';
 import ViewProfile from './ViewProfile'; // Import the ViewProfile component
 import DatePicker from './DatePicker'; // Import the DatePicker component
 import 'daisyui/dist/full.css';
 import 'tailwindcss/tailwind.css';
+import axios from 'axios';
+import { serverUrl } from '../../../api';
+
+// Loader Component
+const Loader = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+    <div className="w-16 h-16 border-4 border-[#FF965D] border-t-transparent border-solid rounded-full animate-spin"></div>
+  </div>
+);
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'Not Banned';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  });
+};
 
 const ManageCandidate = () => {
-  const initialData = [
-    {
-      name: 'Janice Han',
-      email: 'janicehan@gmail.com',
-      profile: 'View Profile',
-      contestant: false,
-      approve: true,
-      banPeriod: '5 Months',
-    },
-    {
-      name: 'Name 2',
-      email: 'name@two.com',
-      profile: 'View Profile',
-      contestant: false,
-      approve: true,
-      banPeriod: '10 Years',
-    },
-    {
-      name: 'Name 3',
-      email: 'name@three.com',
-      profile: 'View Profile',
-      contestant: false,
-      approve: true,
-      banPeriod: '15 Years',
-    },
-    {
-      name: 'Janice Han',
-      email: 'janicehan@gmail.com',
-      profile: 'View Profile',
-      contestant: false,
-      approve: true,
-      banPeriod: '5 Months',
-    },
-  ];
-
-  const [toggleStates, setToggleStates] = useState(initialData);
+  const [toggleStates, setToggleStates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activePickerIndex, setActivePickerIndex] = useState(null); // State to track which row's DatePicker is active
+  const [activePickerIndex, setActivePickerIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleToggleChange = (index, field) => {
-    setToggleStates((prevState) => {
-      const newState = prevState.map((item, i) =>
-        i === index ? { ...item, [field]: !item[field] } : item
-      );
-      return newState;
-    });
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        setLoading(true); // Start loader
+        const response = await fetch(`${serverUrl}allUser`);
+        const data = await response.json();
+
+        const formattedData = data.map((item) => ({
+          name: item.name,
+          email: item.email,
+          profile: 'View Profile',
+          contestant: item.isCandidate,
+          approve: item.isApproved,
+          banPeriod: item.isBanned ? `Banned until ${item.bannedUntil || 'unknown'}` : 'Not Banned',
+          otp: item.otp,
+          otpExpiresAt: item.otpExpiresAt,
+          isBanned: item.isBanned,
+          bannedUntil: item.bannedUntil,
+          id: item._id,
+          username: item.username,
+          password: item.password,
+          contact: item.contact,
+          address: item.address,
+          facebookUrl: item.facebookUrl,
+          instagramUrl: item.instagramUrl,
+          profilePic: item.profilePic,
+          coverPic: item.coverPic,
+          verified: item.verified,
+          followedEvents: item.followedEvents,
+          experiences: item.experiences,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          version: item.__v
+        }));
+
+        setToggleStates(formattedData);
+      } catch (error) {
+        console.error('Error fetching candidates:', error);
+      } finally {
+        setLoading(false); // Stop loader
+      }
+    };
+
+    fetchCandidates();
+  }, []);
+
+  const handleToggleChange = async (index, field) => {
+    const id = toggleStates[index].id;
+    try {
+      setLoading(true); // Start loader
+      if (field === 'contestant') {
+        const newValue = !toggleStates[index][field];
+        const response = await axios.put(`${serverUrl}toggleIsCandidate/${id}`, {
+          isCandidate: newValue
+        });
+        if (response.data.message === 'isCandidate toggled') {
+          setToggleStates((prevState) => {
+            const newState = prevState.map((item, i) =>
+              i === index ? { ...item, [field]: newValue } : item
+            );
+            return newState;
+          });
+        }
+      } else if (field === 'approve') {
+        const newValue = !toggleStates[index][field];
+        const response = await axios.put(`${serverUrl}toggleIsApproved/${id}`, {
+          isApproved: newValue
+        });
+        if (response.data.message === 'isApproved toggled') {
+          setToggleStates((prevState) => {
+            const newState = prevState.map((item, i) =>
+              i === index ? { ...item, [field]: newValue } : item
+            );
+            return newState;
+          });
+        }
+      } else {
+        setToggleStates((prevState) => {
+          const newState = prevState.map((item, i) =>
+            i === index ? { ...item, [field]: !item[field] } : item
+          );
+          return newState;
+        });
+      }
+    } catch (error) {
+      console.error('Error updating candidate:', error);
+    } finally {
+      setLoading(false); // Stop loader
+    }
   };
 
   const handleViewProfile = (candidate) => {
@@ -61,20 +128,64 @@ const ManageCandidate = () => {
     setIsProfileOpen(true);
   };
 
-  const handleDateSelect = (selectedDate, index) => {
-    if(selectedDate){
-    setToggleStates((prevState) => {
-      const newState = prevState.map((item, i) =>
-        i === index ? { ...item, banPeriod: selectedDate } : item
+  const handleDateSelect = async (selectedDate, index) => {
+    // Assuming selectedDate is in the format "X Years Y Months Z Days"
+    const dateParts = selectedDate.match(/(\d+)\s*Years\s*(\d+)\s*Months\s*(\d+)\s*Days/);
+  
+    if (!dateParts) {
+      console.error("Invalid date format:", selectedDate);
+      return;
+    }
+  
+    const [_, years, months, days] = dateParts;
+  
+    const id = toggleStates[index].id;
+  
+    try {
+      setLoading(true);
+
+      const banDuration = {
+        years: years.toString(),
+        months: months.toString(),
+        days: days.toString(),
+      };
+      console.log(banDuration); 
+      // Call the API to ban the user
+      const response = await axios.put(
+        `${serverUrl}banUser/${id}`,
+        banDuration
       );
-      return newState;
-    });}
-    setActivePickerIndex(null); // Close DatePicker after selection
+  
+      if (response.status === 200) {
+        // Update the state with the new ban period
+        setToggleStates((prevState) => {
+          const newState = prevState.map((item, i) =>
+            i === index
+              ? {
+                  ...item,
+                  banPeriod: `Banned for ${banDuration.years} years, ${banDuration.months} months, ${banDuration.days} days`,
+                  isBanned: true,
+                }
+              : item
+          );
+          return newState;
+        });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error banning user:", error);
+    } finally {
+      setLoading(false); 
+    }
+  
+    setActivePickerIndex(null);
   };
+  
 
   return (
     <div className="py-4 scrollable-container">
-      <div className=" rounded-lg border-gray-300">
+      {loading && <Loader />}
+      <div className="rounded-lg border-gray-300">
         <table className="w-full bg-white border-collapse text-center">
           <thead className="bg-[#FFA768] text-white rounded-lg h-12">
             <tr>
@@ -117,7 +228,7 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">
                   <input 
                     type="checkbox" 
-                    className="toggle toggle-md  checked:bg-[#ff8956]" 
+                    className="toggle toggle-md checked:bg-[#ff8956]" 
                     checked={item.approve} 
                     onChange={() => handleToggleChange(index, 'approve')} 
                   />
@@ -126,7 +237,7 @@ const ManageCandidate = () => {
                   <button
                     className="tooltip tooltip-bottom"
                     data-tip="Ban this candidate"
-                    onClick={() => setActivePickerIndex(index)} // Show DatePicker for the clicked row
+                    onClick={() => setActivePickerIndex(index)} 
                   >
                     <IoBan className="text-xl" />
                   </button>
@@ -136,13 +247,12 @@ const ManageCandidate = () => {
                     />
                   )}
                 </td>
-                <td className="py-4 px-4">{item.banPeriod}</td>
+                <td className="py-4 px-4"> {formatDate(item.bannedUntil)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {/* Add ViewProfile component here */}
       <ViewProfile
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}

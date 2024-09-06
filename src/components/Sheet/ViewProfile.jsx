@@ -1,22 +1,23 @@
 import React from 'react';
+import { MdClose } from 'react-icons/md'; // Import the close icon from react-icons
 
 const ViewProfile = ({ isOpen, onClose, candidate }) => {
   if (!isOpen || !candidate) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-8 max-w-lg w-full relative shadow-lg">
+      <div className="bg-white rounded-lg p-8 max-w-lg w-full h-[90vh] max-h-[90vh] relative shadow-lg overflow-auto">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-black"
+          className="absolute top-3  right-3 text-gray-600 hover:text-black"
         >
-          &times;
+          <MdClose size={24} /> 
         </button>
         <div className="flex flex-col items-center mb-6">
           {/* Cover Photo */}
           <div className="w-full h-32 border border-orange-400 flex items-center justify-center mb-[-3rem] rounded-t-lg overflow-hidden">
             <img
-              src="cover-photo-url.jpg" // Replace with the actual cover photo URL or candidate.coverPhoto
+              src={candidate.coverPic || 'cover-photo-url.jpg'}
               alt="Cover Photo"
               className="w-full h-full object-cover"
             />
@@ -25,7 +26,7 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
           {/* Profile Photo */}
           <div className="w-24 h-24 border-4 border-white rounded-full overflow-hidden mb-4 relative z-10">
             <img
-              src="profile-photo-url.jpg" // Replace with the actual profile photo URL or candidate.profilePhoto
+              src={candidate.profilePic || 'profile-photo-url.jpg'}
               alt="Profile Photo"
               className="w-full h-full object-cover"
             />
@@ -40,38 +41,42 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
               <strong>Email:</strong> {candidate.email}
             </div>
             <div>
-              <strong>Location:</strong> NYC {/* Replace with actual location */}
+              <strong>Location:</strong> {candidate.address || 'NYC'}
             </div>
             <div>
-              <strong>Contact:</strong> 6363113138 {/* Replace with actual contact */}
+              <strong>Contact:</strong> {candidate.contact || '6363113138'}
             </div>
             <div>
-              <strong>Facebook:</strong> janicehan24/facebook {/* Replace with actual Facebook URL */}
+              <strong>Facebook:</strong> {candidate.facebookUrl}
             </div>
             <div>
-              <strong>Instagram:</strong> janicehan24/instagram {/* Replace with actual Instagram URL */}
+              <strong>Instagram:</strong> {candidate.instagramUrl}
+            </div>
+            <div className="col-span-2 my-4 border-t border-gray-300"></div>
+            <div>
+              <strong>Is Contestant?:</strong> {candidate.isCandidate}
             </div>
             <div>
-              <strong>Is Contestant?:</strong> {candidate.contestant ? 'Yes' : 'No'}
+              <strong>Ban Count:</strong> {candidate.banCount || 0}
             </div>
-            <div>
-              <strong>Ban Count:</strong> 5 {/* Replace with actual ban count */}
-            </div>
+            <div className="col-span-2 my-4 border-t border-gray-300"></div>
             <div className="col-span-2 mt-4">
               <strong>Comments:</strong>
               <p className="mt-1 text-gray-600">
-                Some Text some text some text some text some text some text
-              </p>
-              <p className="mt-1 text-gray-600">
-                Some Text some text some text some text some text some text
-              </p>
-              <p className="mt-1 text-gray-600">
-                Some Text some text some text some text some text some text
+                {candidate.comments || 'No comments available.'}
               </p>
             </div>
             <div className="col-span-2 mt-4 text-center">
-              <strong>June 24, 2023</strong> {/* Replace with actual date */}
+              <strong>{candidate.createdAt}</strong>
             </div>
+            <div className="col-span-2 my-4 border-t border-gray-300"></div>
+            <div>
+              <strong>About:</strong>
+              <p className="mt-1 text-gray-600">
+                {candidate.about || 'No about information available.'}
+              </p>
+            </div>
+            <div className="col-span-2 my-4 border-t border-gray-300"></div>
           </div>
         </div>
       </div>
