@@ -2,23 +2,23 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import "daisyui/dist/full.css"; // Ensure DaisyUI is installed and imported
-import "./CustomCSS.css"; // Assuming you already have this CSS for styling the DatePicker
-import axios from 'axios'; // Import Axios
+import "daisyui/dist/full.css";
+import "./CustomCSS.css";
+import axios from 'axios';
 import { serverUrl } from "../../../api";
 import LoaderCircle from "../LoaderCircle/LoaderCircle";
-
+import { toast } from "react-toastify";
 
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [popup, setPopup] = useState({ show: false, message: "" });
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
-        console.log(data);
         const formattedEvents = data.map(event => ({
           id: event._id,
           challenger: event.challenger.name,
@@ -31,7 +31,7 @@ const ManageEvents = () => {
       } catch (error) {
         console.error("Error fetching events:", error);
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       }
     };
 
@@ -56,6 +56,77 @@ const ManageEvents = () => {
     setEvents(newEvents);
   };
 
+  const handleGoLive = async (eventId) => {
+    const event = events.find(e => e.id === eventId);
+    
+    if (!event.approved) {
+      setPopup({
+        show: true,
+        message: "Event is not approved. Please approve the event before going live."
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.put(`${serverUrl}goLive/${eventId}`);
+      const { message, eventId: id } = response.data;
+      console.log(message, id);
+        toast.success("Event live successfully")
+      setEvents(events.filter(event => event.id !== id));
+    } catch (error) {
+      console.error("Error going live:", error);
+    }
+  };
+
+  
+
+
+  const handleSchedule = async (eventId) => {
+    const event = events.find(e => e.id === eventId);
+    if (!event.date || !event.time) {
+      setPopup({
+        show: true,
+        message: "Please select both date and time before scheduling."
+      });
+      return;
+    }
+    if (!event.approved) {
+      setPopup({
+        show: true,
+        message: "Event is not approved. Please approve the event before going live."
+      });
+      return;
+    }
+
+
+    const dateAllot = new Date(`${event.date.toISOString().split('T')[0]}T${event.time}:00.000Z`);
+
+    try {
+      const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
+        dateAllot
+      });
+      const { message, eventId: id } = response.data;
+      console.log(message, id);
+      toast.success("Event scheduled successfully")
+      setEvents(events.filter(event => event.id !== id));
+    } catch (error) {
+      console.error("Error scheduling event:", error);
+    }
+  };
+
+
+  const handleDropdownClick = (eventId, action) => {
+    if (action === "goLive") {
+      handleGoLive(eventId);
+    } else if (action === "schedule") {
+      handleSchedule(eventId);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setPopup({ show: false, message: "" });
+  };
+
   const generateTimeOptions = () => {
     const times = [];
     for (let i = 0; i < 24; i++) {
@@ -73,7 +144,7 @@ const ManageEvents = () => {
   return (
     <>
       {loading ? (
-        <LoaderCircle /> // Display LoaderCircle while loading
+        <LoaderCircle />
       ) : (
         <div className="p-6 md:p-8 shadow-lg rounded-xl scrollable-container">
           <h1 className="text-3xl font-bold text-orange-400 mt-8 mb-6 rounded-t-xl">
@@ -134,8 +205,8 @@ const ManageEvents = () => {
                           className="select-dropdown block appearance-none w-full bg-white border border-orange-300 text-black py-2 pl-4 pr-8 rounded-md leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 cursor-pointer"
                           style={{
                             height: "40px",
-                            maxHeight: "240px", // Adjusts for 6 items, each approximately 40px high
-                            overflowY: "auto", // Enables scrolling
+                            maxHeight: "240px",
+                            overflowY: "auto",
                           }}
                         >
                           <option value="" disabled>
@@ -180,10 +251,12 @@ const ManageEvents = () => {
                           style={{ width: "100%" }}
                         >
                           <li>
-                            <a href="#">Go Live</a>
+                            <a href="#" onClick={() => handleDropdownClick(event.id, "goLive")}>
+                              Go Live
+                            </a>
                           </li>
                           <li>
-                            <a href="#">Schedule for later</a>
+                            <a href="#"  onClick={() => handleDropdownClick(event.id, "schedule")} >Schedule for later</a>
                           </li>
                         </ul>
                       </div>
@@ -192,6 +265,20 @@ const ManageEvents = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {popup.show && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300 ease-in-out">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full transform transition-transform duration-300 ease-in-out scale-95">
+            <p className="text-gray-800">{popup.message}</p>
+            <button
+              className="mt-4 bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 transition-colors duration-200"
+              onClick={handleClosePopup}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

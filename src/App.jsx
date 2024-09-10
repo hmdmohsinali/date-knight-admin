@@ -48,7 +48,7 @@ const App = () => {
       {isPopupVisible && (
         <ProfilePopup closePopup={closePopup}>{popupContent}</ProfilePopup>
       )}
-      <ToastContainer position="top-center" />
+      <ToastContainer position="top-center" autoClose="1000"/>
     </>
   );
 };
