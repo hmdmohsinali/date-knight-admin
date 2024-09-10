@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import InviteModal from './InviteModal';
+import LoaderCircle from '../LoaderCircle/LoaderCircle';
 import { serverUrl } from '../../../api';
 
 const InviteCandidate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [invitations, setInvitations] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-
     const fetchInvitations = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch(`${serverUrl}getInvitations`); 
+        const response = await fetch(`${serverUrl}getInvitations`);
         const data = await response.json();
         setInvitations(data.invitations);
       } catch (error) {
         console.error('Error fetching invitations:', error);
+      } finally {
+        setIsLoading(false); 
       }
     };
 
@@ -27,38 +31,51 @@ const InviteCandidate = () => {
         Invite Candidate
       </h2>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg">
-          <thead className="bg-[#FFA768]">
-            <tr>
-              <th className="py-3 px-6 text-left font-semibold text-amber-950">Name</th>
-              <th className="py-3 px-6 text-left font-semibold text-amber-950">Email</th>
-              <th className="py-3 px-6 text-left font-semibold text-amber-950">Status</th>
-              <th className="py-3 px-6 text-left font-semibold text-amber-950">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invitations.map((invite, index) => (
-              <tr key={index} className="border-b last:border-none">
-                <td className="py-3 px-6">{invite.name}</td>
-                <td className="py-3 px-6">{invite.email}</td>
-                <td className={`py-3 px-6 ${invite.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
-                  {invite.status}
-                </td>
-                <td className="py-3 px-6 text-orange-500">
-                  {invite.profileLink ? (
-                    <a href={invite.profileLink} className="hover:underline">
-                      View Profile
-                    </a>
-                  ) : (
-                    'View Profile'
-                  )}
-                </td>
+      {isLoading ? ( 
+        <LoaderCircle />
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white rounded-lg">
+            <thead className="bg-[#FFA768]">
+              <tr>
+                <th className="py-3 px-6 text-left font-semibold text-amber-950">Name</th>
+                <th className="py-3 px-6 text-left font-semibold text-amber-950">Email</th>
+                <th className="py-3 px-6 text-left font-semibold text-amber-950">Status</th>
+                <th className="py-3 px-6 text-left font-semibold text-amber-950">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {invitations.map((invite, index) => (
+                <tr key={index} className="border-b last:border-none">
+                  <td className="py-3 px-6">{invite.name}</td>
+                  <td className="py-3 px-6">{invite.email}</td>
+                  <td className={`py-3 px-6 ${invite.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
+                    {invite.status}
+                  </td>
+                  <td className="py-3 px-6">
+                    {invite.profileLink ? (
+                      <a
+                        href={invite.profileLink}
+                        className={`hover:underline ${
+                          invite.status === 'Pending' ? 'text-gray-500' : 'text-orange-500'
+                        }`}
+                      >
+                        View Profile
+                      </a>
+                    ) : (
+                      <span className={`${
+                        invite.status === 'Pending' ? 'text-gray-500' : 'text-orange-500'
+                      }`}>
+                        View Profile
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <div className='flex justify-end mt-6'>
         <button

@@ -1,39 +1,55 @@
-import React, { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import LoaderCircle from "../LoaderCircle/LoaderCircle";
+
 
 const ManageWinner = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 24,
-      challenger: "Joey Tribbs",
-      opponent: "Chan Bing",
-      date: "24-08-2000",
-      status: "Completed",
-      winner: "Joey Tribbs",
-      winnerOptions: ["Joey Tribbs", "Chan Bing"],
-      statusOptions: ["Completed", "Tied"],
-    },
-    {
-      id: 18,
-      challenger: "Name 2",
-      opponent: "Name 2",
-      date: "24-08-2000",
-      status: "Tied",
-      winner: "Pending",
-      winnerOptions: ["Name 2", "Name 2"],
-      statusOptions: ["Completed", "Tied"],
-    },
-    {
-      id: 8,
-      challenger: "Name 3",
-      opponent: "Name 3",
-      date: "24-08-2000",
-      status: "Tied",
-      winner: "Pending",
-      winnerOptions: ["Name 3", "Name 3"],
-      statusOptions: ["Completed", "Tied"],
-    },
-  ]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+
+  useEffect(() => {
+    // Simulate fetching data from an API
+    const fetchEvents = () => {
+      setLoading(true); 
+        const fetchedEvents = [
+          {
+            id: 24,
+            challenger: "Joey Tribbs",
+            opponent: "Chan Bing",
+            date: "24-08-2000",
+            status: "Completed",
+            winner: "Joey Tribbs",
+            winnerOptions: ["Joey Tribbs", "Chan Bing"],
+            statusOptions: ["Completed", "Tied"],
+          },
+          {
+            id: 18,
+            challenger: "Name 2",
+            opponent: "Name 2",
+            date: "24-08-2000",
+            status: "Tied",
+            winner: "Pending",
+            winnerOptions: ["Name 2", "Name 2"],
+            statusOptions: ["Completed", "Tied"],
+          },
+          {
+            id: 8,
+            challenger: "Name 3",
+            opponent: "Name 3",
+            date: "24-08-2000",
+            status: "Tied",
+            winner: "Pending",
+            winnerOptions: ["Name 3", "Name 3"],
+            statusOptions: ["Completed", "Tied"],
+          },
+        ];
+
+        setEvents(fetchedEvents);
+        setLoading(false); // Set loading to false after data is fetched
+       
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleWinnerChange = (e, index) => {
     const newEvents = [...events];
@@ -47,9 +63,13 @@ const ManageWinner = () => {
     setEvents(newEvents);
   };
 
+  if (loading) {
+    return <LoaderCircle />; 
+  }
+
   return (
     <div className="p-6 md:p-8 shadow-lg rounded-xl overflow-hidden max-w-full mx-auto mt-10">
-      <h1 className="text-3xl font-bold text-orange-400 mb-6 ">
+      <h1 className="text-3xl font-bold text-orange-400 mb-6">
         Manage Winner
       </h1>
       <div className="overflow-x-auto">
@@ -118,14 +138,8 @@ const ManageWinner = () => {
           </tbody>
         </table>
       </div>
-      <div className="mt-6 text-center">
-      </div>
     </div>
   );
 };
 
 export default ManageWinner;
-
-
-
-

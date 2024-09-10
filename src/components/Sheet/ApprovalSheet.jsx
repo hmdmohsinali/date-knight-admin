@@ -3,17 +3,11 @@ import { IoBan } from 'react-icons/io5';
 import { FaInfoCircle } from 'react-icons/fa';
 import ViewProfile from './ViewProfile'; // Import the ViewProfile component
 import DatePicker from './DatePicker'; // Import the DatePicker component
+import LoaderCircle from '../LoaderCircle/LoaderCircle';
 import 'daisyui/dist/full.css';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import { serverUrl } from '../../../api';
-
-// Loader Component
-const Loader = () => (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-    <div className="w-16 h-16 border-4 border-[#FF965D] border-t-transparent border-solid rounded-full animate-spin"></div>
-  </div>
-);
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Not Banned';
@@ -184,7 +178,7 @@ const ManageCandidate = () => {
 
   return (
     <div className="py-4 scrollable-container">
-      {loading && <Loader />}
+      {loading && <LoaderCircle />}
       <div className="rounded-lg border-gray-300">
         <table className="w-full bg-white border-collapse text-center">
           <thead className="bg-[#FFA768] text-white rounded-lg h-12">
@@ -242,21 +236,23 @@ const ManageCandidate = () => {
                     <IoBan className="text-xl" />
                   </button>
                   {activePickerIndex === index && (
-                    <DatePicker 
-                      onDateSelect={(selectedDate) => handleDateSelect(selectedDate, index)}
+                    <DatePicker
+                      index={index}
+                      handleDateSelect={handleDateSelect}
+                      handleClose={() => setActivePickerIndex(null)} 
                     />
                   )}
                 </td>
-                <td className="py-4 px-4"> {formatDate(item.bannedUntil)}</td>
+                <td className="py-4 px-4">{formatDate(item.bannedUntil)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <ViewProfile
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        candidate={selectedCandidate}
+      <ViewProfile 
+        candidate={selectedCandidate} 
+        isOpen={isProfileOpen} 
+        onClose={() => setIsProfileOpen(false)} 
       />
     </div>
   );

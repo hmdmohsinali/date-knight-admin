@@ -13,25 +13,31 @@ const InviteModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  // Function to handle closing of the modal and resetting the state
+  const handleClose = () => {
+    setName(''); // Reset name input
+    setEmail(''); // Reset email input
+    setError(''); // Reset error state
+    setSuccess(''); // Reset success message
+    onClose(); // Close the modal
+  };
+
   const handleInvite = async () => {
-    setLoading(true); // Set loading state to true before API call
-    setError(''); // Reset any previous errors
-    setSuccess(''); // Reset any previous success message
+    setLoading(true); 
+    setError('');
+    setSuccess('');
 
     try {
-      // Make API call to invite endpoint
+      
       await axios.post(`${serverUrl}invite`, { name, email });
       setSuccess('Invitation sent successfully!');
-      setName(''); // Reset name input
-      setEmail(''); // Reset email input
-      onClose();
       toast.success(`Invitation sent successfully to ${name}!`);
-      // window.location.reload();
+      handleClose();
     } catch (error) {
-      console.error('Error sending invitation:', error);
-      setError('Failed to send invitation.'); // Set error message
+      toast.error('Error sending invitation:', error);
+      setError('Failed to send invitation.'); 
     } finally {
-      setLoading(false); // Set loading state back to false
+      setLoading(false); 
     }
   };
 
@@ -40,7 +46,7 @@ const InviteModal = ({ isOpen, onClose }) => {
       <div className="bg-white rounded-xl shadow-lg p-14 w-96 relative">
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-3 right-3 text-orange-400 text-2xl leading-none hover:text-orange-500"
         >
           &times;

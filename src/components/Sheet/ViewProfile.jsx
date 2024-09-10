@@ -54,7 +54,7 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
             </div>
             <div className="col-span-2 my-4 border-t border-gray-300"></div>
             <div>
-              <strong>Is Contestant?:</strong> {candidate.isCandidate}
+              <strong>Is Contestant?:</strong> {candidate.isCandidate ? "Yes":"No"}
             </div>
             <div>
               <strong>Ban Count:</strong> {candidate.banCount || 0}
@@ -77,6 +77,12 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
               </p>
             </div>
             <div className="col-span-2 my-4 border-t border-gray-300"></div>
+            <div>
+              <strong>Experiences:</strong>
+              <p className="mt-1 text-gray-600">
+                {candidate.experiences || 'No Experience information available.'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
