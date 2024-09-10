@@ -10,8 +10,8 @@ import InviteCandidate from "./components/InviteCandidate/InviteCandidate";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignIn from "./components/SignIn/SignIn";
-import RoutesProtection from "./components/RoutesProtection/RouteProtection";
 import AcceptInvitation from "./components/AcceptInvite/AcceptInvitation";
+import RoutesProtection from './components/RoutesProtection/RouteProtection'
 
 const App = () => {
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -32,15 +32,16 @@ const App = () => {
         <div className="max-w-[100%] w-[1050px] flex-auto scrollable-container">
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
-            {/* <Route element={<RoutesProtection />}> */}
+      
+            <Route element={<RoutesProtection />}>
               <Route element={<Body />}>
                 <Route path="/" element={<VisitorApproval />} />
                 <Route path="invite-candidate" element={<InviteCandidate />} />
                 <Route path="manage-event" element={<ManageEvent />} />
+                <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
                 <Route path="manage-winner" element={<ManageWinner />} />
               </Route>
-            {/* </Route> */}
+            </Route>
           </Routes>
         </div>
       </div>
