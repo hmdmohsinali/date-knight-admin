@@ -50,10 +50,31 @@ const ManageEvents = () => {
     setEvents(newEvents);
   };
 
-  const handleToggle = (index) => {
-    const newEvents = [...events];
-    newEvents[index].approved = !newEvents[index].approved;
-    setEvents(newEvents);
+  const handleToggle = async (index) => {
+    const eventId = events[index].id;
+  
+   
+  
+    try {
+      // Call the API to toggle the event's approval status
+      const response = await axios.put(`${serverUrl}approveEvent/${eventId}`);
+  
+      if (response.data.message === 'Event approval status updated') {
+        const newEvents = [...events];
+        newEvents[index].approved = !newEvents[index].approved;
+        setEvents(newEvents);
+  
+        // Show success message
+        toast.success("Event approval status updated successfully");
+      } else {
+        toast.error("Failed to update event approval status");
+      }
+    } catch (error) {
+      console.error("Error updating event approval status:", error);
+      toast.error("Error updating event approval status");
+    } finally {
+      
+    }
   };
 
   const handleGoLive = async (eventId) => {
@@ -78,9 +99,6 @@ const ManageEvents = () => {
     }
   };
 
-  
-
-
   const handleSchedule = async (eventId) => {
     const event = events.find(e => e.id === eventId);
     if (!event.date || !event.time) {
@@ -98,7 +116,6 @@ const ManageEvents = () => {
       return;
     }
 
-
     const dateAllot = new Date(`${event.date.toISOString().split('T')[0]}T${event.time}:00.000Z`);
 
     try {
@@ -113,7 +130,6 @@ const ManageEvents = () => {
       console.error("Error scheduling event:", error);
     }
   };
-
 
   const handleDropdownClick = (eventId, action) => {
     if (action === "goLive") {
