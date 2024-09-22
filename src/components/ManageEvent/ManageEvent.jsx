@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import "daisyui/dist/full.css";
 import "./CustomCSS.css";
-import axios from 'axios';
+import axios from "axios";
 import { serverUrl } from "../../../api";
 import LoaderCircle from "../LoaderCircle/LoaderCircle";
 import { toast } from "react-toastify";
@@ -19,7 +19,7 @@ const ManageEvents = () => {
       try {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
-        const formattedEvents = data.map(event => ({
+        const formattedEvents = data.map((event) => ({
           id: event._id,
           challenger: event.challenger.name,
           opponent: event.challengedUser.name,
@@ -52,18 +52,16 @@ const ManageEvents = () => {
 
   const handleToggle = async (index) => {
     const eventId = events[index].id;
-  
-   
-  
+
     try {
       // Call the API to toggle the event's approval status
       const response = await axios.put(`${serverUrl}approveEvent/${eventId}`);
-  
-      if (response.data.message === 'Event approval status updated') {
+
+      if (response.data.message === "Event approval status updated") {
         const newEvents = [...events];
         newEvents[index].approved = !newEvents[index].approved;
         setEvents(newEvents);
-  
+
         // Show success message
         toast.success("Event approval status updated successfully");
       } else {
@@ -73,17 +71,17 @@ const ManageEvents = () => {
       console.error("Error updating event approval status:", error);
       toast.error("Error updating event approval status");
     } finally {
-      
     }
   };
 
   const handleGoLive = async (eventId) => {
-    const event = events.find(e => e.id === eventId);
-    
+    const event = events.find((e) => e.id === eventId);
+
     if (!event.approved) {
       setPopup({
         show: true,
-        message: "Event is not approved. Please approve the event before going live."
+        message:
+          "Event is not approved. Please approve the event before going live.",
       });
       return;
     }
@@ -92,40 +90,43 @@ const ManageEvents = () => {
       const response = await axios.put(`${serverUrl}goLive/${eventId}`);
       const { message, eventId: id } = response.data;
       console.log(message, id);
-        toast.success("Event live successfully")
-      setEvents(events.filter(event => event.id !== id));
+      toast.success("Event live successfully");
+      setEvents(events.filter((event) => event.id !== id));
     } catch (error) {
       console.error("Error going live:", error);
     }
   };
 
   const handleSchedule = async (eventId) => {
-    const event = events.find(e => e.id === eventId);
+    const event = events.find((e) => e.id === eventId);
     if (!event.date || !event.time) {
       setPopup({
         show: true,
-        message: "Please select both date and time before scheduling."
+        message: "Please select both date and time before scheduling.",
       });
       return;
     }
     if (!event.approved) {
       setPopup({
         show: true,
-        message: "Event is not approved. Please approve the event before going live."
+        message:
+          "Event is not approved. Please approve the event before going live.",
       });
       return;
     }
 
-    const dateAllot = new Date(`${event.date.toISOString().split('T')[0]}T${event.time}:00.000Z`);
+    const dateAllot = new Date(
+      `${event.date.toISOString().split("T")[0]}T${event.time}:00.000Z`
+    );
 
     try {
       const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
-        dateAllot
+        dateAllot,
       });
       const { message, eventId: id } = response.data;
       console.log(message, id);
-      toast.success("Event scheduled successfully")
-      setEvents(events.filter(event => event.id !== id));
+      toast.success("Event scheduled successfully");
+      setEvents(events.filter((event) => event.id !== id));
     } catch (error) {
       console.error("Error scheduling event:", error);
     }
@@ -210,6 +211,7 @@ const ManageEvents = () => {
                           wrapperClassName="w-full"
                           calendarClassName="custom-calendar"
                           popperPlacement="bottom"
+                          minDate={new Date()} // Prevent selection of past dates
                         />
                       </div>
                     </td>
@@ -217,7 +219,9 @@ const ManageEvents = () => {
                       <div className="relative">
                         <select
                           value={event.time}
-                          onChange={(e) => handleTimeChange(e.target.value, index)}
+                          onChange={(e) =>
+                            handleTimeChange(e.target.value, index)
+                          }
                           className="select-dropdown block appearance-none w-full bg-white border border-orange-300 text-black py-2 pl-4 pr-8 rounded-md leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 cursor-pointer"
                           style={{
                             height: "40px",
@@ -267,12 +271,24 @@ const ManageEvents = () => {
                           style={{ width: "100%" }}
                         >
                           <li>
-                            <a href="#" onClick={() => handleDropdownClick(event.id, "goLive")}>
+                            <a
+                              href="#"
+                              onClick={() =>
+                                handleDropdownClick(event.id, "goLive")
+                              }
+                            >
                               Go Live
                             </a>
                           </li>
                           <li>
-                            <a href="#"  onClick={() => handleDropdownClick(event.id, "schedule")} >Schedule for later</a>
+                            <a
+                              href="#"
+                              onClick={() =>
+                                handleDropdownClick(event.id, "schedule")
+                              }
+                            >
+                              Schedule for later
+                            </a>
                           </li>
                         </ul>
                       </div>
