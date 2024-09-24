@@ -32,13 +32,13 @@ const App = () => {
         <div className="max-w-[100%] w-[1050px] flex-auto scrollable-container">
           <Routes>
             <Route path="/sign-in" element={<SignIn />} />
-      
+            <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
             <Route element={<RoutesProtection />}>
               <Route element={<Body />}>
                 <Route path="/" element={<VisitorApproval />} />
                 <Route path="invite-candidate" element={<InviteCandidate />} />
                 <Route path="manage-event" element={<ManageEvent />} />
-                <Route path="/accept-invitation" element={<AcceptInvitation/>}/>
+                
                 <Route path="manage-winner" element={<ManageWinner />} />
               </Route>
             </Route>
