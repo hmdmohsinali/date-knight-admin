@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Body from "./components/Body/Body";
 import VisitorApproval from "./components/VisitorApproval/VisitorApproval";
 import ManageEvent from "./components/ManageEvent/ManageEvent";
