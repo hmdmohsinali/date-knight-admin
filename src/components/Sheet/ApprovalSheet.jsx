@@ -25,6 +25,7 @@ const ManageCandidate = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activePickerIndex, setActivePickerIndex] = useState(null);
   const [loading, setLoading] = useState(false);
+  console.log(selectedCandidate)
 
   useEffect(() => {
     const fetchCandidates = async () => {

@@ -15,6 +15,7 @@ const InviteCandidate = () => {
         const response = await fetch(`${serverUrl}getInvitations`);
         const data = await response.json();
         setInvitations(data.invitations);
+       
       } catch (error) {
         console.error('Error fetching invitations:', error);
       } finally {
