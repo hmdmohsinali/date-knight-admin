@@ -19,13 +19,14 @@ const ManageEvents = () => {
       try {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
+        console.log(data)
         const formattedEvents = data.map((event) => ({
           id: event._id,
           challenger: event.challenger.name,
           opponent: event.challengedUser.name,
           date: null,
           time: "",
-          approved: false,
+          approve: event.approve,
         }));
         setEvents(formattedEvents);
       } catch (error) {
@@ -59,7 +60,7 @@ const ManageEvents = () => {
 
       if (response.data.message === "Event approval status updated") {
         const newEvents = [...events];
-        newEvents[index].approved = !newEvents[index].approved;
+        newEvents[index].approve = !newEvents[index].approve;
         setEvents(newEvents);
 
         // Show success message
@@ -77,7 +78,7 @@ const ManageEvents = () => {
   const handleGoLive = async (eventId) => {
     const event = events.find((e) => e.id === eventId);
 
-    if (!event.approved) {
+    if (!event.approve) {
       setPopup({
         show: true,
         message:
@@ -106,7 +107,7 @@ const ManageEvents = () => {
       });
       return;
     }
-    if (!event.approved) {
+    if (!event.approve) {
       setPopup({
         show: true,
         message:
@@ -118,6 +119,8 @@ const ManageEvents = () => {
     const dateAllot = new Date(
       `${event.date.toISOString().split("T")[0]}T${event.time}:00.000Z`
     );
+    
+    console.log(dateAllot)
 
     try {
       const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
@@ -253,7 +256,7 @@ const ManageEvents = () => {
                       <input
                         type="checkbox"
                         className="toggle toggle-warning"
-                        checked={event.approved}
+                        checked={event.approve}
                         onChange={() => handleToggle(index)}
                       />
                     </td>
