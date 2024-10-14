@@ -16,6 +16,7 @@ const ManageWinner = () => {
         const response = await axios.get(`${serverUrl}getScheduleEvents`);
         const data = response.data;
         
+        
         const transformedData = data.map((event) => ({
           id: event._id,
           challenger: event.challenger.name,

@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='/invite-candidate'
                 className={({ isActive }) =>
-                  `block py-3 px-4 text-lg font-medium rounded-lg transition-colors duration-300 ${
+                  `block py-3 px-3 text-lg font-medium rounded-lg transition-colors duration-300 ${
                     isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FFA764]'
                   }`
                 }
@@ -71,7 +71,7 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='/manage-event'
                 className={({ isActive }) =>
-                  `block py-3 px-4 text-lg font-medium rounded-lg transition-colors duration-300 ${
+                  `block py-3 px-3 text-lg font-medium rounded-lg transition-colors duration-300 ${
                     isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FFA764]'
                   }`
                 }
@@ -83,12 +83,24 @@ const Sidebar = ({ isOpen, toggleSideBar }) => {
               <NavLink
                 to='/manage-winner'
                 className={({ isActive }) =>
-                  `block py-3 px-4 text-lg font-medium rounded-lg transition-colors duration-300 ${
+                  `block py-3 px-3 text-lg font-medium rounded-lg transition-colors duration-300 ${
                     isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FFA764]'
                   }`
                 }
               >
                 Manage Winner
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to='/scheduled-events'
+                className={({ isActive }) =>
+                  `block py-3 px-3 text-lg font-medium rounded-lg transition-colors duration-300 ${
+                    isActive ? 'bg-white text-[#FFA764]' : 'text-white hover:bg-[#FFA764]'
+                  }`
+                }
+              >
+                Scheduled Events
               </NavLink>
             </li>
           </ul>
