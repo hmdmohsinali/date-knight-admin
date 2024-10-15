@@ -189,7 +189,7 @@ const ManageEvents = () => {
               <tbody>
                 {events.map((event, index) => (
                   <tr key={event.id} className="border-b last:border-b-0">
-                    <td className="py-2 px-4 border-r">{event.id}</td>
+                    <td className="py-2 px-4 border-r">{event.id.slice(-4)}</td>
                     <td className="py-2 px-4 border-r">{event.challenger}</td>
                     <td className="py-2 px-4 border-r">{event.opponent}</td>
                     <td className="py-2 px-4 border-r">

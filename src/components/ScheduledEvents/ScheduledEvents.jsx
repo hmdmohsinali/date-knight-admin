@@ -81,7 +81,7 @@ const ScheduledEvents = () => {
           <tbody>
             {eventsData.map((event) => (
               <tr key={event._id} className="border-b last:border-b-0">
-                <td className="py-2 px-4 border-r">{event._id}</td>
+                <td className="py-2 px-4 border-r">{event._id.slice(-4)}</td>
                 <td className="py-2 px-4 border-r">{event.challenger.name}</td>
                 <td className="py-2 px-4 border-r">{event.challengedUser.name}</td>
                 <td className="py-2 px-4 border-r flex items-center">
