@@ -17,7 +17,6 @@ import ScheduledEvents from "./components/ScheduledEvents/ScheduledEvents";
 
 const App = () => {
 
-
   return (
     <>
       <div className={`flex h-screen `}>
