@@ -29,10 +29,11 @@ const InviteModal = ({ isOpen, onClose }) => {
 
     try {
       
-      await axios.post(`${serverUrl}invite`, { name, email });
+      const response = await axios.post(`${serverUrl}invite`, { name, email });
       setSuccess('Invitation sent successfully!');
       toast.success(`Invitation sent successfully to ${name}!`);
       handleClose();
+      console.log(response.data)
     } catch (error) {
       toast.error('Error sending invitation:', error);
       setError('Failed to send invitation.'); 
