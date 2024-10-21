@@ -32,17 +32,16 @@ const AcceptInvitation = () => {
     address: '',
     token: ''
   });
-<<<<<<< HEAD
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-=======
+
   const [modalMessage, setModalMessage] = useState('');
   const [modalType, setModalType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModalOnError, setShowModalOnError] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
->>>>>>> 69a68eb5fe612094e7e5234d01315307dd7fb6d6
   const location = useLocation();
 
   useEffect(() => {
@@ -51,14 +50,11 @@ const AcceptInvitation = () => {
     if (token) {
       setFormData((prevData) => ({ ...prevData, token }));
     } else {
-<<<<<<< HEAD
       setError('Invalid or missing token.');
       toast.error('Invalid or missing token.');
-=======
       setModalType('error');
       setModalMessage('Invalid or missing token.');
       setShowModalOnError(true);
->>>>>>> 69a68eb5fe612094e7e5234d01315307dd7fb6d6
     }
   }, [location.search]);
 
@@ -71,14 +67,11 @@ const AcceptInvitation = () => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-<<<<<<< HEAD
       setError('Passwords do not match.');
       toast.error('Passwords do not match.');
-=======
       setModalType('error');
       setModalMessage('Passwords do not match.');
       setIsModalOpen(true);
->>>>>>> 69a68eb5fe612094e7e5234d01315307dd7fb6d6
       return;
     }
 
@@ -90,7 +83,6 @@ const AcceptInvitation = () => {
           'Content-Type': 'application/json',
         },
       });
-<<<<<<< HEAD
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
@@ -104,7 +96,6 @@ const AcceptInvitation = () => {
       console.error('Error accepting invitation:', error);
       setError('An error occurred. Please try again.');
       toast.error('An error occurred. Please try again.');
-=======
 
       if (response.status === 200) {
         setModalType('success');
@@ -117,7 +108,7 @@ const AcceptInvitation = () => {
       setIsModalOpen(true);
     } finally {
       setIsLoading(false); // End loading
->>>>>>> 69a68eb5fe612094e7e5234d01315307dd7fb6d6
+
     }
   };
 
@@ -135,7 +126,6 @@ const AcceptInvitation = () => {
   }, [showModalOnError]);
 
   return (
-<<<<<<< HEAD
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="max-w-lg w-full p-6 bg-white shadow-lg rounded-lg">
      
@@ -210,7 +200,6 @@ const AcceptInvitation = () => {
           </div>
         )}
       </div>
-=======
     <div className="max-w-md mx-auto p-8 mt-2 bg-white shadow-lg rounded-md border border-gray-200">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Accept Invitation</h2>
 
@@ -299,7 +288,7 @@ const AcceptInvitation = () => {
           onClose={handleCloseModal}
         />
       )}
->>>>>>> 69a68eb5fe612094e7e5234d01315307dd7fb6d6
+
     </div>
   );
 };
