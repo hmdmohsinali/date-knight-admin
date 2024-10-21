@@ -58,8 +58,8 @@ const AcceptInvitation = () => {
           'Content-Type': 'application/json',
         },
       });
-
-      if (response.status === 200) {
+      console.log(response.data)
+      if (response.status === 201) {
         setSuccess(true);
         setError('');
         toast.success('Invitation accepted successfully!');
@@ -87,7 +87,7 @@ const AcceptInvitation = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    navigate('/login'); // Redirect to login after closing the modal
+  // Redirect to login after closing the modal
   };
 
   return (

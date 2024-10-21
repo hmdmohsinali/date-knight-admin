@@ -13,7 +13,7 @@ const SuccessModal = ({ message, onClose }) => {
             onClick={onClose}
             className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
           >
-            Go to Login
+            OK
           </button>
         </div>
       </div>
