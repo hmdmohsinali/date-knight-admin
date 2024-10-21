@@ -25,7 +25,7 @@ const DatePicker = ({ onDateSelect, position }) => {
   }
   return (
     <div
-      className="picker-container bg-white p-4 shadow-lg rounded-lg z-50"
+      className="picker-container bg-white p-4 shadow-lg rounded-lg z-30"
       style={{
         position: 'absolute',
         top: position?.top || '50%',
