@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import InviteModal from './InviteModal';
 import LoaderCircle from '../LoaderCircle/LoaderCircle';
 import { serverUrl } from '../../../api';
+import ViewProfile from '../Sheet/ViewProfile';
 
 const InviteCandidate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [invitations, setInvitations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
+  // New state variables for ViewProfile modal
+  const [isViewProfileOpen, setIsViewProfileOpen] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [isCandidateLoading, setIsCandidateLoading] = useState(false);
 
   useEffect(() => {
     const fetchInvitations = async () => {
@@ -15,16 +20,41 @@ const InviteCandidate = () => {
         const response = await fetch(`${serverUrl}getInvitations`);
         const data = await response.json();
         setInvitations(data.invitations);
-       
       } catch (error) {
         console.error('Error fetching invitations:', error);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
 
     fetchInvitations();
   }, []);
+
+  // Function to extract userId from profileLink if userId is not directly available
+  const extractUserIdFromProfileLink = (profileLink) => {
+    const segments = profileLink.split('/');
+    return segments[segments.length - 1]; // Assuming userId is at the end
+  };
+
+  // Function to handle "View Profile" click
+  const handleViewProfile = async (invite) => {
+    const userId = invite.userId || extractUserIdFromProfileLink(invite.profileLink);
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+    try {
+      setIsCandidateLoading(true);
+      const response = await fetch(`https://date-knight-backend.vercel.app/user/userDetails/${userId}`);
+      const data = await response.json();
+      setSelectedCandidate(data);
+      setIsViewProfileOpen(true);
+    } catch (error) {
+      console.error('Error fetching candidate details:', error);
+    } finally {
+      setIsCandidateLoading(false);
+    }
+  };
 
   return (
     <div className="p-6 md:p-8 rounded-lg shadow-md">
@@ -32,7 +62,7 @@ const InviteCandidate = () => {
         Invite Candidate
       </h2>
 
-      {isLoading ? ( 
+      {isLoading ? (
         <LoaderCircle />
       ) : (
         <div className="overflow-x-auto">
@@ -50,25 +80,24 @@ const InviteCandidate = () => {
                 <tr key={index} className="border-b last:border-none">
                   <td className="py-3 px-6">{invite.name}</td>
                   <td className="py-3 px-6">{invite.email}</td>
-                  <td className={`py-3 px-6 ${invite.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
+                  <td
+                    className={`py-3 px-6 ${
+                      invite.status === 'Accepted' ? 'text-green-500' : 'text-red-500'
+                    }`}
+                  >
                     {invite.status}
                   </td>
                   <td className="py-3 px-6">
-                    {invite.profileLink ? (
-                      <a
-                        href={invite.profileLink}
-                        className={`hover:underline ${
-                          invite.status === 'Pending' ? 'text-gray-500' : 'text-orange-500'
-                        }`}
+                    {invite.status === 'Accepted' ? (
+                      <button
+                        className="text-orange-500 hover:underline"
+                        onClick={() => handleViewProfile(invite)}
+                        disabled={isCandidateLoading}
                       >
                         View Profile
-                      </a>
+                      </button>
                     ) : (
-                      <span className={`${
-                        invite.status === 'Pending' ? 'text-gray-500' : 'text-orange-500'
-                      }`}>
-                        View Profile
-                      </span>
+                      <span className="text-gray-500">View Profile</span>
                     )}
                   </td>
                 </tr>
@@ -78,7 +107,7 @@ const InviteCandidate = () => {
         </div>
       )}
 
-      <div className='flex justify-end mt-6'>
+      <div className="flex justify-end mt-6">
         <button
           className="bg-orange-500 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-600"
           onClick={() => setIsModalOpen(true)}
@@ -88,6 +117,13 @@ const InviteCandidate = () => {
 
         <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
+
+      {/* Render the ViewProfile modal */}
+      <ViewProfile
+        isOpen={isViewProfileOpen}
+        onClose={() => setIsViewProfileOpen(false)}
+        candidate={selectedCandidate}
+      />
     </div>
   );
 };

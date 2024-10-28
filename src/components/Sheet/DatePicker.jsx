@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import Picker from 'react-mobile-picker';
 
 const selections = {
-  year: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  month: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-  day: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+  year: [...Array(11).keys()], // Generates [0,1,2,...,10]
+  month: [...Array(13).keys()], // Generates [0,1,2,...,12]
+  day: [...Array(20).keys()].map((i) => i + 1), // Generates [1,2,...,20]
 };
 
-const DatePicker = ({ onDateSelect, position }) => {
+const DatePicker = ({ onDateSelect, onClose }) => {
   const [pickerValue, setPickerValue] = useState({
     year: '0',
     month: '0',
@@ -18,50 +18,47 @@ const DatePicker = ({ onDateSelect, position }) => {
     const { year, month, day } = pickerValue;
     const selectedDate = `${year} Years ${month} Months ${day} Days`;
     onDateSelect(selectedDate);
+    onClose(); // Close the modal
   };
 
-  const handleCancel=()=>{
-    onDateSelect()
-  }
+  const handleCancel = () => {
+    onClose(); // Close the modal without selecting a date
+  };
+
   return (
-    <div
-      className="picker-container bg-white p-4 shadow-lg rounded-lg z-30"
-      style={{
-        position: 'absolute',
-        top: position?.top || '50%',
-        left: position?.left || '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
-      <div className="header flex justify-between mb-2">
-        <span>Years</span>
-        <span>Months</span>
-        <span>Days</span>
-      </div>
-      <Picker value={pickerValue} onChange={setPickerValue}>
-        {Object.keys(selections).map((name) => (
-          <Picker.Column key={name} name={name}>
-            {selections[name].map((option) => (
-              <Picker.Item key={option} value={option}>
-                {option}
-              </Picker.Item>
-            ))}
-          </Picker.Column>
-        ))}
-      </Picker>
-      <div className="footer flex justify-end space-x-4 mt-4">
-        <button
-          className=" bg-red-500 text-white px-3 py-1 rounded"
-          onClick={handleCancel}
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Overlay */}
+      <div className="fixed inset-0 bg-black opacity-50" onClick={handleCancel}></div>
+
+      {/* Modal Content */}
+      <div className="bg-white p-4 shadow-lg rounded-lg z-50 w-72"> {/* Increased width with w-96 */}
+        <div className="header flex justify-between mb-2">
+          <span>Years</span>
+          <span>Months</span>
+          <span>Days</span>
+        </div>
+        <Picker
+          value={pickerValue}
+          onChange={(name, value) => setPickerValue((prev) => ({ ...prev, [name]: value }))}
         >
-          Cancel
-        </button>
-        <button
-          className=" bg-blue-500 text-white px-3 py-1 rounded"
-          onClick={handleSetDate}
-        >
-          Set
-        </button>
+          {Object.keys(selections).map((name) => (
+            <Picker.Column key={name} name={name}>
+              {selections[name].map((option) => (
+                <Picker.Item key={option} value={option.toString()}>
+                  {option}
+                </Picker.Item>
+              ))}
+            </Picker.Column>
+          ))}
+        </Picker>
+        <div className="footer flex justify-end space-x-4 mt-4">
+          <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button className="bg-blue-500 text-white px-3 py-1 rounded" onClick={handleSetDate}>
+            Set
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,6 @@ const ManageCandidate = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activePickerIndex, setActivePickerIndex] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log(selectedCandidate)
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -59,7 +58,7 @@ const ManageCandidate = () => {
           experiences: item.experiences,
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
-          version: item.__v
+          version: item.__v,
         }));
 
         setToggleStates(formattedData);
@@ -80,7 +79,7 @@ const ManageCandidate = () => {
       if (field === 'contestant') {
         const newValue = !toggleStates[index][field];
         const response = await axios.put(`${serverUrl}toggleIsCandidate/${id}`, {
-          isCandidate: newValue
+          isCandidate: newValue,
         });
         if (response.data.message === 'isCandidate toggled') {
           setToggleStates((prevState) => {
@@ -93,7 +92,7 @@ const ManageCandidate = () => {
       } else if (field === 'approve') {
         const newValue = !toggleStates[index][field];
         const response = await axios.put(`${serverUrl}toggleIsApproved/${id}`, {
-          isApproved: newValue
+          isApproved: newValue,
         });
         if (response.data.message === 'isApproved toggled') {
           setToggleStates((prevState) => {
@@ -124,18 +123,22 @@ const ManageCandidate = () => {
   };
 
   const handleDateSelect = async (selectedDate, index) => {
-    // Assuming selectedDate is in the format "X Years Y Months Z Days"
-    const dateParts = selectedDate.match(/(\d+)\s*Years\s*(\d+)\s*Months\s*(\d+)\s*Days/);
-  
-    if (!dateParts) {
-      console.error("Invalid date format:", selectedDate);
+    if (!selectedDate) {
+      // User cancelled the date selection
       return;
     }
-  
+
+    // Assuming selectedDate is in the format "X Years Y Months Z Days"
+    const dateParts = selectedDate.match(/(\d+)\s*Years\s*(\d+)\s*Months\s*(\d+)\s*Days/);
+
+    if (!dateParts) {
+      console.error('Invalid date format:', selectedDate);
+      return;
+    }
+
     const [_, years, months, days] = dateParts;
-  
     const id = toggleStates[index].id;
-  
+
     try {
       setLoading(true);
 
@@ -144,13 +147,9 @@ const ManageCandidate = () => {
         months: months.toString(),
         days: days.toString(),
       };
-      console.log(banDuration); 
-      // Call the API to ban the user
-      const response = await axios.put(
-        `${serverUrl}banUser/${id}`,
-        banDuration
-      );
-  
+
+      const response = await axios.put(`${serverUrl}banUser/${id}`, banDuration);
+
       if (response.status === 200) {
         // Update the state with the new ban period
         setToggleStates((prevState) => {
@@ -158,24 +157,23 @@ const ManageCandidate = () => {
             i === index
               ? {
                   ...item,
-                  banPeriod: `Banned for ${banDuration.years} years, ${banDuration.months} months, ${banDuration.days} days`,
+                  banPeriod: `Banned until ${formatDate(response.data.bannedUntil)}`,
                   isBanned: true,
+                  bannedUntil: response.data.bannedUntil,
                 }
               : item
           );
           return newState;
         });
-        window.location.reload();
+        // Optionally, you can reload the data or the page
+        // window.location.reload();
       }
     } catch (error) {
-      console.error("Error banning user:", error);
+      console.error('Error banning user:', error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
-  
-    setActivePickerIndex(null);
   };
-  
 
   return (
     <div className="py-4 scrollable-container">
@@ -191,7 +189,10 @@ const ManageCandidate = () => {
               <th className="px-3 uppercase font-semibold text-sm">Approve</th>
               <th className="px-3 uppercase font-semibold text-sm whitespace-nowrap">
                 Action
-                <div className="tooltip tooltip-bottom ml-2" data-tip="This will grant you the authority to ban individuals for a certain time frame">
+                <div
+                  className="tooltip tooltip-bottom ml-2"
+                  data-tip="This will grant you the authority to ban individuals for a certain time frame"
+                >
                   <FaInfoCircle className="ml-2 inline-block text-white" />
                 </div>
               </th>
@@ -204,43 +205,38 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">{item.name}</td>
                 <td className="py-4 px-4">{item.email}</td>
                 <td className="py-4 px-4">
-                  <a
-                    href="#"
-                    className=""
-                    onClick={() => handleViewProfile(item)}
-                  >
+                  <a href="#" className="" onClick={() => handleViewProfile(item)}>
                     {item.profile}
                   </a>
                 </td>
                 <td className="py-4 px-4">
-                  <input 
-                    type="checkbox" 
-                    className="toggle toggle-md checked:bg-orange-500" 
-                    checked={item.contestant} 
-                    onChange={() => handleToggleChange(index, 'contestant')} 
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-md checked:bg-orange-500"
+                    checked={item.contestant}
+                    onChange={() => handleToggleChange(index, 'contestant')}
                   />
                 </td>
                 <td className="py-4 px-4">
-                  <input 
-                    type="checkbox" 
-                    className="toggle toggle-md checked:bg-[#ff8956]" 
-                    checked={item.approve} 
-                    onChange={() => handleToggleChange(index, 'approve')} 
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-md checked:bg-[#ff8956]"
+                    checked={item.approve}
+                    onChange={() => handleToggleChange(index, 'approve')}
                   />
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-4 px-4 relative">
                   <button
                     className=""
                     data-tip="Ban this candidate"
-                    onClick={() => setActivePickerIndex(index)} 
+                    onClick={() => setActivePickerIndex(index)}
                   >
                     <FaBan className="text-xl " />
                   </button>
                   {activePickerIndex === index && (
                     <DatePicker
-                      index={index}
-                      handleDateSelect={handleDateSelect}
-                      handleClose={() => setActivePickerIndex(null)} 
+                      onDateSelect={(selectedDate) => handleDateSelect(selectedDate, index)}
+                      onClose={() => setActivePickerIndex(null)}
                     />
                   )}
                 </td>
@@ -250,10 +246,10 @@ const ManageCandidate = () => {
           </tbody>
         </table>
       </div>
-      <ViewProfile 
-        candidate={selectedCandidate} 
-        isOpen={isProfileOpen} 
-        onClose={() => setIsProfileOpen(false)} 
+      <ViewProfile
+        candidate={selectedCandidate}
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
       />
     </div>
   );
