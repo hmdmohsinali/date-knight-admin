@@ -51,13 +51,13 @@ const DatePicker = ({ onDateSelect, position }) => {
       </Picker>
       <div className="footer flex justify-end space-x-4 mt-4">
         <button
-          className="cancel-btn bg-red-500 text-white px-3 py-1 rounded"
+          className=" bg-red-500 text-white px-3 py-1 rounded"
           onClick={handleCancel}
         >
           Cancel
         </button>
         <button
-          className="set-btn bg-blue-500 text-white px-3 py-1 rounded"
+          className=" bg-blue-500 text-white px-3 py-1 rounded"
           onClick={handleSetDate}
         >
           Set

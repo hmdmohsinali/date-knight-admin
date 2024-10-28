@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IoBan } from 'react-icons/io5';
+import { FaBan } from 'react-icons/fa';
 import { FaInfoCircle } from 'react-icons/fa';
 import ViewProfile from './ViewProfile'; // Import the ViewProfile component
 import DatePicker from './DatePicker'; // Import the DatePicker component
@@ -230,11 +230,11 @@ const ManageCandidate = () => {
                 </td>
                 <td className="py-4 px-4">
                   <button
-                    className="tooltip tooltip-bottom"
+                    className=""
                     data-tip="Ban this candidate"
                     onClick={() => setActivePickerIndex(index)} 
                   >
-                    <IoBan className="text-xl" />
+                    <FaBan className="text-xl " />
                   </button>
                   {activePickerIndex === index && (
                     <DatePicker
