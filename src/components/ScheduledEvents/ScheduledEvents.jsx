@@ -3,8 +3,10 @@ import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoaderCircle from "../LoaderCircle/LoaderCircle";
+import { serverUrl } from "../../../api";
 
 const ScheduledEvents = () => {
+  
   const [eventsData, setEventsData] = useState([]);
   const [editableEventId, setEditableEventId] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Loader state
@@ -13,7 +15,7 @@ const ScheduledEvents = () => {
     // Fetch events data from the API
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("https://date-knight-backend.vercel.app/admin/getULEvenets");
+        const response = await axios.get(`${serverUrl}getULEvenets`);
         setEventsData(response.data);
       } catch (error) {
         toast.error("Failed to fetch events data.");
@@ -39,7 +41,7 @@ const ScheduledEvents = () => {
     if (e.key === "Enter") {
       try {
         // Call PATCH API using axios when Enter is pressed
-        const response = await axios.patch(`https://date-knight-backend.vercel.app/admin/addLink/${event._id}`, {
+        const response = await axios.patch(`${serverUrl}addLink/${event._id}`, {
           youtubeLink: event.youtubeLink,
         });
         // Show success message
@@ -53,9 +55,13 @@ const ScheduledEvents = () => {
     }
   };
 
-  const handleGoLive = (id) => {
-    console.log(`Going live for event ID: ${id}`);
-    // Add your go live logic here
+  const handleGoLive = async (id) => {
+    try {
+      const response = await axios.post(`${serverUrl}liveEvent`, { eventId: id });
+      toast.success("Event is now live!");
+    } catch (error) {
+      toast.error("Failed to go live. Please try again.");
+    }
   };
 
   if (isLoading) {
