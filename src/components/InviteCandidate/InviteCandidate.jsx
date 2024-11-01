@@ -6,9 +6,8 @@ import ViewProfile from '../Sheet/ViewProfile';
 
 const InviteCandidate = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [invitations, setInvitations] = useState([]);
+  const [invitations, setInvitations] = useState(null); // Initialize with null to differentiate between loading and empty state
   const [isLoading, setIsLoading] = useState(true);
-  // New state variables for ViewProfile modal
   const [isViewProfileOpen, setIsViewProfileOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isCandidateLoading, setIsCandidateLoading] = useState(false);
@@ -19,9 +18,10 @@ const InviteCandidate = () => {
       try {
         const response = await fetch(`${serverUrl}getInvitations`);
         const data = await response.json();
-        setInvitations(data.invitations);
+        setInvitations(data.invitations || []); // Set to empty array if no invitations
       } catch (error) {
         console.error('Error fetching invitations:', error);
+        setInvitations([]); // Set to empty array on error to avoid rendering issues
       } finally {
         setIsLoading(false);
       }
@@ -30,13 +30,11 @@ const InviteCandidate = () => {
     fetchInvitations();
   }, []);
 
-  // Function to extract userId from profileLink if userId is not directly available
   const extractUserIdFromProfileLink = (profileLink) => {
     const segments = profileLink.split('/');
-    return segments[segments.length - 1]; // Assuming userId is at the end
+    return segments[segments.length - 1];
   };
 
-  // Function to handle "View Profile" click
   const handleViewProfile = async (invite) => {
     const userId = invite.userId || extractUserIdFromProfileLink(invite.profileLink);
     if (!userId) {
@@ -64,7 +62,7 @@ const InviteCandidate = () => {
 
       {isLoading ? (
         <LoaderCircle />
-      ) : (
+      ) : invitations && invitations.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg">
             <thead className="bg-[#FFA768]">
@@ -105,6 +103,8 @@ const InviteCandidate = () => {
             </tbody>
           </table>
         </div>
+      ) : (
+        <p className="text-center text-gray-500">No invitations found.</p>
       )}
 
       <div className="flex justify-end mt-6">
@@ -118,7 +118,6 @@ const InviteCandidate = () => {
         <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
 
-      {/* Render the ViewProfile modal */}
       <ViewProfile
         isOpen={isViewProfileOpen}
         onClose={() => setIsViewProfileOpen(false)}
