@@ -73,14 +73,14 @@ const ScheduledEvents = () => {
     <div className="p-6 md:p-8 shadow-lg rounded-xl">
       <h1 className="text-3xl font-bold text-orange-400 mt-8 mb-6">Scheduled Events</h1>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-xl text-sm md:text-base">
+        <table className="min-w-full bg-white text-sm md:text-base">
           <thead>
             <tr className="bg-[#FFA768]">
-              <th className="py-2 px-4 text-left font-medium text-gray-700 border-b rounded-tl-xl">ID</th>
-              <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">CHALLENGER</th>
-              <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">OPPONENT</th>
-              <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">YOUTUBE LINK</th>
-              <th className="py-2 px-4 text-left font-medium text-gray-700 border-b rounded-tr-xl">ACTION</th>
+              <th className="py-2 px-4 text-left font-medium text-white border-b ">ID</th>
+              <th className="py-2 px-4 text-left font-medium text-white border-b">CHALLENGER</th>
+              <th className="py-2 px-4 text-left font-medium text-white border-b">OPPONENT</th>
+              <th className="py-2 px-4 text-left font-medium text-white border-b">YOUTUBE LINK</th>
+              <th className="py-2 px-4 text-left font-medium text-white border-b ">ACTION</th>
             </tr>
           </thead>
           <tbody>

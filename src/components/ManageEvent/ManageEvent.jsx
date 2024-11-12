@@ -160,28 +160,28 @@ const ManageEvents = () => {
             Manage Event
           </h1>
           <div className="overflow-x-auto scrollable-container">
-            <table className="min-w-full bg-white rounded-xl text-sm md:text-base">
+            <table className="min-w-full bg-white  text-sm md:text-base">
               <thead>
                 <tr className="bg-[#FFA768]">
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b rounded-tl-xl">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b ">
                     ID
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     CHALLENGER
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     OPPONENT
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     EVENT DATE
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     EVENT TIME
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     APPROVE
                   </th>
-                  <th className="py-2 px-4 text-left font-medium text-gray-700 border-b rounded-tr-xl">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     EVENT ACTION
                   </th>
                 </tr>

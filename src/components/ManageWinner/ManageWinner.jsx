@@ -101,22 +101,22 @@ events.map((eventss) => {
         <table className="min-w-full bg-white rounded-xl text-sm md:text-base">
           <thead>
             <tr className="bg-[#FFA768]">
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 ID
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 CHALLENGER
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 OPPONENT
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 EVENT DATE
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 EVENT STATUS
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-700 border-b">
+              <th className="py-3 px-4 text-left font-medium text-white border-b">
                 WINNER
               </th>
             </tr>

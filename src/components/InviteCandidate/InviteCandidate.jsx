@@ -67,10 +67,10 @@ const InviteCandidate = () => {
           <table className="min-w-full bg-white rounded-lg">
             <thead className="bg-[#FFA768]">
               <tr>
-                <th className="py-3 px-6 text-left font-semibold text-amber-950">Name</th>
-                <th className="py-3 px-6 text-left font-semibold text-amber-950">Email</th>
-                <th className="py-3 px-6 text-left font-semibold text-amber-950">Status</th>
-                <th className="py-3 px-6 text-left font-semibold text-amber-950">Action</th>
+                <th className="py-3 px-6 text-left font-semibold text-white">Name</th>
+                <th className="py-3 px-6 text-left font-semibold text-white">Email</th>
+                <th className="py-3 px-6 text-left font-semibold text-white">Status</th>
+                <th className="py-3 px-6 text-left font-semibold text-white">Action</th>
               </tr>
             </thead>
             <tbody>

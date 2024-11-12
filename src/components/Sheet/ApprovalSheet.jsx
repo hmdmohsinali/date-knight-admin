@@ -220,7 +220,7 @@ const ManageCandidate = () => {
                 <td className="py-4 px-4">
                   <input
                     type="checkbox"
-                    className="toggle toggle-md checked:bg-[#ff8956]"
+                    className="toggle toggle-md checked:bg-orange-500"
                     checked={item.approve}
                     onChange={() => handleToggleChange(index, 'approve')}
                   />
