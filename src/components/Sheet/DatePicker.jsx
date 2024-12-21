@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import Picker from 'react-mobile-picker';
 
-const selections = {
-  year: [...Array(11).keys()], // Generates [0,1,2,...,10]
-  month: [...Array(13).keys()], // Generates [0,1,2,...,12]
-  day: [...Array(20).keys()].map((i) => i + 1), // Generates [1,2,...,20]
-};
-
 const DatePicker = ({ onDateSelect, onClose }) => {
-  const [pickerValue, setPickerValue] = useState({
+  const [valueGroups, setValueGroups] = useState({
     year: '0',
     month: '0',
     day: '1',
   });
 
+  // Define the available options for each column
+  const optionGroups = {
+    year: Array.from({ length: 11 }, (_, i) => i.toString()),  // "0" to "10" years
+    month: Array.from({ length: 13 }, (_, i) => i.toString()), // "0" to "12" months
+    day: Array.from({ length: 20 }, (_, i) => (i + 1).toString()) // "1" to "20" days
+  };
+
+  const handleChange = (name, value) => {
+    setValueGroups((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSetDate = () => {
-    const { year, month, day } = pickerValue;
+    const { year, month, day } = valueGroups;
     const selectedDate = `${year} Years ${month} Months ${day} Days`;
     onDateSelect(selectedDate);
     onClose(); // Close the modal
@@ -31,26 +36,17 @@ const DatePicker = ({ onDateSelect, onClose }) => {
       <div className="fixed inset-0 bg-black opacity-50" onClick={handleCancel}></div>
 
       {/* Modal Content */}
-      <div className="bg-white p-4 shadow-lg rounded-lg z-50 w-72"> {/* Increased width with w-96 */}
+      <div className="bg-white p-4 shadow-lg rounded-lg z-50 w-72">
         <div className="header flex justify-between mb-2">
           <span>Years</span>
           <span>Months</span>
           <span>Days</span>
         </div>
         <Picker
-          value={pickerValue}
-          onChange={(name, value) => setPickerValue((prev) => ({ ...prev, [name]: value }))}
-        >
-          {Object.keys(selections).map((name) => (
-            <Picker.Column key={name} name={name}>
-              {selections[name].map((option) => (
-                <Picker.Item key={option} value={option.toString()}>
-                  {option}
-                </Picker.Item>
-              ))}
-            </Picker.Column>
-          ))}
-        </Picker>
+          optionGroups={optionGroups}
+          valueGroups={valueGroups}
+          onChange={handleChange}
+        />
         <div className="footer flex justify-end space-x-4 mt-4">
           <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={handleCancel}>
             Cancel

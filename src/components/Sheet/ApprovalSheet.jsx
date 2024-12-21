@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaBan } from 'react-icons/fa';
-import { FaInfoCircle } from 'react-icons/fa';
+import { FaBan, FaInfoCircle } from 'react-icons/fa';
 import ViewProfile from './ViewProfile'; // Import the ViewProfile component
-import DatePicker from './DatePicker'; // Import the DatePicker component
 import LoaderCircle from '../LoaderCircle/LoaderCircle';
 import 'daisyui/dist/full.css';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import { serverUrl } from '../../../api';
+import DatePicker from 'react-datepicker';  // New library
+import 'react-datepicker/dist/react-datepicker.css'; // CSS for react-datepicker
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Not Banned';
@@ -128,7 +128,7 @@ const ManageCandidate = () => {
       return;
     }
 
-    // Assuming selectedDate is in the format "X Years Y Months Z Days"
+    // selectedDate format: "X Years Y Months Z Days"
     const dateParts = selectedDate.match(/(\d+)\s*Years\s*(\d+)\s*Months\s*(\d+)\s*Days/);
 
     if (!dateParts) {
@@ -165,14 +165,75 @@ const ManageCandidate = () => {
           );
           return newState;
         });
-        // Optionally, you can reload the data or the page
-        // window.location.reload();
       }
     } catch (error) {
       console.error('Error banning user:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // New BanDatePicker component integrated here
+  const BanDatePicker = ({ onDateSelect, onClose }) => {
+    const [startDate, setStartDate] = useState(new Date());
+
+    const handleSetDate = () => {
+      const now = new Date();
+      const selected = startDate;
+      const diffTime = selected - now;
+
+      if (diffTime <= 0) {
+        // If selected date is now or in the past, set 0 Years 0 Months 0 Days
+        onDateSelect("0 Years 0 Months 0 Days");
+        onClose();
+        return;
+      }
+
+      // Calculate difference roughly:
+      let years = selected.getFullYear() - now.getFullYear();
+      let months = selected.getMonth() - now.getMonth();
+      let days = selected.getDate() - now.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(selected.getFullYear(), selected.getMonth(), 0).getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      const selectedDateStr = `${years} Years ${months} Months ${days} Days`;
+      onDateSelect(selectedDateStr);
+      onClose();
+    };
+
+    const handleCancel = () => onClose();
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        {/* Overlay */}
+        <div className="fixed inset-0 bg-black opacity-50" onClick={handleCancel}></div>
+
+        {/* Modal Content */}
+        <div className="bg-white p-4 shadow-lg rounded-lg z-50 w-72">
+          <DatePicker 
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            inline
+          />
+          <div className="footer flex justify-end space-x-4 mt-4">
+            <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={handleCancel}>
+              Cancel
+            </button>
+            <button className="bg-blue-500 text-white px-3 py-1 rounded" onClick={handleSetDate}>
+              Set
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -234,7 +295,7 @@ const ManageCandidate = () => {
                     <FaBan className="text-xl " />
                   </button>
                   {activePickerIndex === index && (
-                    <DatePicker
+                    <BanDatePicker
                       onDateSelect={(selectedDate) => handleDateSelect(selectedDate, index)}
                       onClose={() => setActivePickerIndex(null)}
                     />
