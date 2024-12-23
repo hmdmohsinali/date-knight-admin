@@ -56,9 +56,18 @@ const InviteCandidate = () => {
 
   return (
     <div className="p-6 md:p-8 rounded-lg shadow-md">
-      <h2 className="text-3xl mt-6 font-bold text-orange-500 mb-6 text-left">
-        Invite Candidate
-      </h2>
+      {/* Header Section with Title and Invite Button */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-orange-500">
+          Invite Candidate
+        </h2>
+        <button
+          className="bg-orange-500 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-600"
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Invite
+        </button>
+      </div>
 
       {isLoading ? (
         <LoaderCircle />
@@ -107,17 +116,10 @@ const InviteCandidate = () => {
         <p className="text-center text-gray-500">No invitations found.</p>
       )}
 
-      <div className="flex justify-end mt-6">
-        <button
-          className="bg-orange-500 text-white font-bold py-2 px-4 rounded-full hover:bg-orange-600"
-          onClick={() => setIsModalOpen(true)}
-        >
-          + Invite
-        </button>
-
-        <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      </div>
-
+      {/* Removed the button from here */}
+      
+      {/* Modal Components */}
+      <InviteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <ViewProfile
         isOpen={isViewProfileOpen}
         onClose={() => setIsViewProfileOpen(false)}

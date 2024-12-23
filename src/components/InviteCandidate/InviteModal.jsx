@@ -34,7 +34,6 @@ const InviteModal = ({ isOpen, onClose }) => {
       toast.success(`Invitation sent successfully to ${name}!`);
       handleClose();
       window.location.reload()
-      console.log(response.data)
     } catch (error) {
       toast.error('Error sending invitation:', error);
       setError('Failed to send invitation.'); 
