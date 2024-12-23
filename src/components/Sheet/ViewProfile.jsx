@@ -57,7 +57,7 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
               <strong>Is Contestant?:</strong> {candidate.isCandidate ? "Yes":"No"}
             </div>
             <div>
-              <strong>Ban Count:</strong> {candidate.banCount || 0}
+              <strong>Ban Count:</strong> {candidate.banCount}
             </div>
             <div className="col-span-2 my-4 border-t border-gray-300"></div>
             <div className="col-span-2 mt-4">
