@@ -3,7 +3,7 @@ import { MdClose } from 'react-icons/md'; // Import the close icon from react-ic
 
 const ViewProfile = ({ isOpen, onClose, candidate }) => {
   if (!isOpen || !candidate) return null;
-  
+  console.log(candidate);
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-8 max-w-lg w-full h-[90vh] max-h-[90vh] relative shadow-lg overflow-auto">
@@ -54,7 +54,7 @@ const ViewProfile = ({ isOpen, onClose, candidate }) => {
             </div>
             <div className="col-span-2 my-4 border-t border-gray-300"></div>
             <div>
-              <strong>Is Contestant?:</strong> {candidate.isCandidate ? "Yes":"No"}
+              <strong>Is Contestant?:</strong> {candidate.contestant ? "Yes":"No"}
             </div>
             <div>
               <strong>Ban Count:</strong> {candidate.banCount}
