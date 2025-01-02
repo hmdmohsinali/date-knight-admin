@@ -39,6 +39,7 @@ const ManageCandidate = () => {
           profile: 'View Profile',
           contestant: item.isCandidate,
           approve: item.isApproved,
+          banCount: item.banCount,
           banPeriod: item.isBanned ? `Banned until ${item.bannedUntil || 'unknown'}` : 'Not Banned',
           otp: item.otp,
           otpExpiresAt: item.otpExpiresAt,
