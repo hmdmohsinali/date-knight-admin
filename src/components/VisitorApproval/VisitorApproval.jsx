@@ -193,8 +193,9 @@ const VisitorApproval = ({ onProfileClick }) => {
     };
 
     fetchMonthlyData();
+    
   }, []);
-
+  console.log(monthlyData)
   const handleProfileClick = (profile) => {
     const profileContent = (
       <>
