@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRegUserCircle } from "react-icons/fa";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ApprovalSheet from '../Sheet/ApprovalSheet';
+import { serverUrl } from '../../../api';
+import axios from 'axios';
 
 const VisitorApproval = ({ onProfileClick }) => {
   const [weeklyData, setWeeklyData] = useState([]);

@@ -110,7 +110,6 @@
 
 
 
-// src/components/InviteCandidate/InviteModal.jsx
 import React, { useState, useContext } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -136,21 +135,32 @@ const InviteModal = ({ isOpen, onClose }) => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
+
+    // Validate input fields
     if (!name.trim() || !email.trim()) {
       toast.error('Please provide both name and email.');
       return;
     }
 
-    setSubmitting(true); 
+    setSubmitting(true); // Start loading indicator
+
     try {
+      // Attempt to invite the candidate
       await inviteCandidate(name.trim(), email.trim());
+
+      // Show success toast
       toast.success(`Invitation sent successfully to ${name}!`);
+
+      // Close the modal and reset input fields
       handleClose();
     } catch (error) {
-      // Error handling is managed in the context
-      // Additional error feedback can be provided here if needed
+      // Extract error message from backend response
+      const errorMessage = error.response?.data?.message || 'Failed to send invitation.';
+      
+      // Display the error message in a toast
+      toast.error(errorMessage);
     } finally {
-      setSubmitting(false); 
+      setSubmitting(false); // Stop loading indicator
     }
   };
 
@@ -209,8 +219,9 @@ const InviteModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
-};
+}; 
 
 export default InviteModal;
+
 
 

@@ -334,16 +334,13 @@
 import React, { useContext, useState } from 'react';
 import { FaBan, FaInfoCircle } from 'react-icons/fa';
 import LoaderCircle from '../LoaderCircle/LoaderCircle';
-import 'daisyui/dist/full.css';
-import 'tailwindcss/tailwind.css';
-import DatePicker from 'react-datepicker';  // New library
-import 'react-datepicker/dist/react-datepicker.css'; // CSS for react-datepicker
-import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { CandidateContext } from '../InviteCandidate/CandidateContext';
+import { toast } from 'react-toastify'; // Ensure toast is imported
+import axios from 'axios';
 import { serverUrl } from '../../../api';
 import ViewProfile from './ViewProfile';
-
-
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Not Banned';
@@ -356,107 +353,20 @@ const formatDate = (dateString) => {
 };
 
 const ManageCandidate = () => {
-  const { candidates, toggleContestantStatus, updateBanPeriod } = useContext(CandidateContext);
+  const { managedCandidates, toggleContestantStatus, updateBanPeriod, loading } = useContext(CandidateContext);
+  const [isViewProfileOpen, setIsViewProfileOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activePickerIndex, setActivePickerIndex] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [activePickerId, setActivePickerId] = useState(null);
+  const [banLoading, setBanLoading] = useState(false); // Separate loading state for banning
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        setLoading(true); // Start loader
-        const response = await fetch(`${serverUrl}allUser`);
-        const data = await response.json();
-
-        const formattedData = data.map((item) => ({
-          name: item.name,
-          email: item.email,
-          profile: 'View Profile',
-          contestant: item.isCandidate,
-          approve: item.isApproved,
-          banCount: item.banCount,
-          banPeriod: item.isBanned ? `Banned until ${item.bannedUntil || 'unknown'}` : 'Not Banned',
-          otp: item.otp,
-          otpExpiresAt: item.otpExpiresAt,
-          isBanned: item.isBanned,
-          bannedUntil: item.bannedUntil,
-          id: item._id,
-          username: item.username,
-          password: item.password,
-          contact: item.contact,
-          address: item.address,
-          facebookUrl: item.facebookUrl,
-          instagramUrl: item.instagramUrl,
-          profilePic: item.profilePic,
-          coverPic: item.coverPic,
-          verified: item.verified,
-          followedEvents: item.followedEvents,
-          experiences: item.experiences,
-          createdAt: item.createdAt,
-          updatedAt: item.updatedAt,
-          version: item.__v,
-        }));
-
-        setToggleStates(formattedData);
-      } catch (error) {
-        console.error('Error fetching candidates:', error);
-      } finally {
-        setLoading(false); // Stop loader
-      }
-    };
-
-    fetchCandidates();
-  }, []);
-
-  const handleToggleChange = async (index, field) => {
-    const id = toggleStates[index].id;
-    try {
-      setLoading(true); // Start loader
-      if (field === 'contestant') {
-        const newValue = !toggleStates[index][field];
-        const response = await axios.put(`${serverUrl}toggleIsCandidate/${id}`, {
-          isCandidate: newValue,
-        });
-        if (response.data.message === 'isCandidate toggled') {
-          setToggleStates((prevState) => {
-            const newState = prevState.map((item, i) =>
-              i === index ? { ...item, [field]: newValue } : item
-            );
-            return newState;
-          });
-        }
-      } else if (field === 'approve') {
-        const newValue = !toggleStates[index][field];
-        const response = await axios.put(`${serverUrl}toggleIsApproved/${id}`, {
-          isApproved: newValue,
-        });
-        if (response.data.message === 'isApproved toggled') {
-          setToggleStates((prevState) => {
-            const newState = prevState.map((item, i) =>
-              i === index ? { ...item, [field]: newValue } : item
-            );
-            return newState;
-          });
-        }
-      } else {
-        setToggleStates((prevState) => {
-          const newState = prevState.map((item, i) =>
-            i === index ? { ...item, [field]: !item[field] } : item
-          );
-          return newState;
-        });
-      }
-    } catch (error) {
-      console.error('Error updating candidate:', error);
-    } finally {
-      setLoading(false); // Stop loader
-    }
+  const handleToggleChange = (id, currentStatus, name) => {
+    // Removed window.confirm
+    toggleContestantStatus(id, currentStatus, false); // 'false' since toggling from managedCandidates
   };
 
   const handleViewProfile = (candidate) => {
     setSelectedCandidate(candidate);
-    setIsProfileOpen(true);
+    setIsViewProfileOpen(true);
   };
 
   const handleDateSelect = async (selectedDate, id) => {
@@ -470,12 +380,14 @@ const ManageCandidate = () => {
 
     if (!dateParts) {
       console.error('Invalid date format:', selectedDate);
+      toast.error('Invalid date format selected.');
       return;
     }
 
     const [_, years, months, days] = dateParts;
 
     try {
+      setBanLoading(true);
       const banDuration = {
         years: years.toString(),
         months: months.toString(),
@@ -483,13 +395,18 @@ const ManageCandidate = () => {
       };
 
       const response = await axios.put(`${serverUrl}banUser/${id}`, banDuration);
-
       if (response.status === 200) {
         // Update the context with the new ban period
         updateBanPeriod(id, response.data);
+        toast.success('Ban period updated successfully.');
+      } else {
+        toast.error('Failed to update ban period.');
       }
     } catch (error) {
       console.error('Error banning user:', error);
+      toast.error('Failed to ban user.');
+    } finally {
+      setBanLoading(false);
     }
   };
 
@@ -556,9 +473,6 @@ const ManageCandidate = () => {
     );
   };
 
-  // Filter candidates who are not invited and not contestants
-  const manageCandidates = candidates.filter(candidate => !candidate.isInvited && !candidate.isCandidate);
-
   return (
     <div className="py-4 scrollable-container">
       {loading && <LoaderCircle />}
@@ -570,7 +484,6 @@ const ManageCandidate = () => {
               <th className="px-3 uppercase font-semibold text-sm">Email</th>
               <th className="px-3 uppercase font-semibold text-sm">Profile</th>
               <th className="px-3 uppercase font-semibold text-sm">Contestant?</th>
-              {/* <th className="px-3 uppercase font-semibold text-sm">Approve</th> */}
               <th className="px-3 uppercase font-semibold text-sm whitespace-nowrap">
                 Action
                 <div
@@ -585,31 +498,24 @@ const ManageCandidate = () => {
             </tr>
           </thead>
           <tbody className="text-gray-700">
-            {manageCandidates.map((item) => (
+            {managedCandidates.map((item) => (
               <tr key={item.id} className="rows">
                 <td className="py-4 px-4">{item.name}</td>
                 <td className="py-4 px-4">{item.email}</td>
                 <td className="py-4 px-4">
-                  <a href="#" onClick={() => handleViewProfile(item)}>
+                  <a href="#" onClick={() => handleViewProfile(item)} className="text-blue-500 hover:underline">
                     {item.profile}
                   </a>
                 </td>
                 <td className="py-4 px-4">
+                  {/* Enabled Contestant Toggle */}
                   <input
                     type="checkbox"
                     className="toggle toggle-md checked:bg-orange-500"
                     checked={item.isCandidate}
-                    onChange={() => handleToggleChange(item.id, item.isCandidate)}
+                    onChange={() => handleToggleChange(item.id, item.isCandidate, item.name)}
                   />
                 </td>
-                {/* <td className="py-4 px-4">
-                  <input
-                    type="checkbox"
-                    className="toggle toggle-md checked:bg-orange-500"
-                    checked={item.approve}
-                    onChange={() => handleToggleChange(item.id, 'approve')}
-                  />
-                </td> */}
                 <td className="py-4 px-4 relative">
                   <button
                     className=""
@@ -626,7 +532,11 @@ const ManageCandidate = () => {
                   )}
                 </td>
                 <td className="py-4 px-4">{formatDate(item.bannedUntil)}</td>
-                <td className="py-4 px-4 text-red-500 font-semibold">N/A</td>
+                <td className={`py-4 px-4 font-semibold ${
+                  item.isBanned ? 'text-red-500' : 'text-green-500'
+                }`}>
+                  {item.isBanned ? 'Banned' : 'Active'}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -634,14 +544,16 @@ const ManageCandidate = () => {
       </div>
       <ViewProfile
         candidate={selectedCandidate}
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
+        isOpen={isViewProfileOpen}
+        onClose={() => setIsViewProfileOpen(false)}
       />
+      {banLoading && <LoaderCircle />}
     </div>
   );
 };
 
 export default ManageCandidate;
+
 
 
 
