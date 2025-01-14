@@ -248,7 +248,7 @@ const ManageCandidate = () => {
               <th className="px-3 uppercase font-semibold text-sm">Email</th>
               <th className="px-3 uppercase font-semibold text-sm">Profile</th>
               <th className="px-3 uppercase font-semibold text-sm">Contestant?</th>
-              <th className="px-3 uppercase font-semibold text-sm">Approve</th>
+              {/* <th className="px-3 uppercase font-semibold text-sm">Approve</th> */}
               <th className="px-3 uppercase font-semibold text-sm whitespace-nowrap">
                 Action
                 <div
@@ -279,14 +279,14 @@ const ManageCandidate = () => {
                     onChange={() => handleToggleChange(index, 'contestant')}
                   />
                 </td>
-                <td className="py-4 px-4">
+                {/* <td className="py-4 px-4">
                   <input
                     type="checkbox"
                     className="toggle toggle-md checked:bg-orange-500"
                     checked={item.approve}
                     onChange={() => handleToggleChange(index, 'approve')}
                   />
-                </td>
+                </td> */}
                 <td className="py-4 px-4 relative">
                   <button
                     className=""
