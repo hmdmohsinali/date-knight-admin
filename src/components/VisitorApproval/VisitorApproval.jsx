@@ -70,8 +70,7 @@ const VisitorApproval = ({ onProfileClick }) => {
     onProfileClick(profileContent);
   };
 
-  const [showLogout, setShowLogout] = useState(false);
-
+  
   const toggleLogout = () => {
     setShowLogout(prevShowLogout => !prevShowLogout);
   };

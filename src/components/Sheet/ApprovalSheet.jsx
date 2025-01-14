@@ -356,7 +356,7 @@ const formatDate = (dateString) => {
 };
 
 const ManageCandidate = () => {
-  const { candidates, loading, toggleContestantStatus, updateBanPeriod } = useContext(CandidateContext);
+  const { candidates, toggleContestantStatus, updateBanPeriod } = useContext(CandidateContext);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activePickerIndex, setActivePickerIndex] = useState(null);
