@@ -4,30 +4,45 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import ApprovalSheet from '../Sheet/ApprovalSheet';
 
 const VisitorApproval = ({ onProfileClick }) => {
-  const weeklyData = [
-    { day: 'Mon', signups: 75 },
-    { day: 'Tue', signups: 125 },
-    { day: 'Wed', signups: 100 },
-    { day: 'Thu', signups: 50 },
-    { day: 'Fri', signups: 150 },
-    { day: 'Sat', signups: 175 },
-    { day: 'Sun', signups: 200 },
-  ];
+  const [weeklyData, setWeeklyData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [showLogout, setShowLogout] = useState(false);
 
-  const monthlyData = [
-    { month: 'Jan', signups: 800 },
-    { month: 'Feb', signups: 1200 },
-    { month: 'Mar', signups: 1500 },
-    { month: 'Apr', signups: 1800 },
-    { month: 'May', signups: 2000 },
-    { month: 'Jun', signups: 2300 },
-    { month: 'Jul', signups: 2600 },
-    { month: 'Aug', signups: 3000 },
-    { month: 'Sep', signups: 2800 },
-    { month: 'Oct', signups: 3200 },
-    { month: 'Nov', signups: 3400 },
-    { month: 'Dec', signups: 4000 },
-  ];
+  // Fetch data for weekly signups
+  useEffect(() => {
+    const fetchWeeklyData = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}weeklyDatar`); // Adjust API endpoint as needed
+        const formattedData = response.data.data.map((item) => ({
+          day: item._id,
+          signups: item.count,
+        }));
+        setWeeklyData(formattedData);
+      } catch (error) {
+        console.error("Error fetching weekly data:", error);
+      }
+    };
+
+    fetchWeeklyData();
+  }, []);
+
+  // Fetch data for monthly signups
+  useEffect(() => {
+    const fetchMonthlyData = async () => {
+      try {
+        const response = await axios.get(`${serverUrl}yearlyData`); // Adjust API endpoint as needed
+        const formattedData = response.data.data.map((item) => ({
+          month: item._id,
+          signups: item.count,
+        }));
+        setMonthlyData(formattedData);
+      } catch (error) {
+        console.error("Error fetching monthly data:", error);
+      }
+    };
+
+    fetchMonthlyData();
+  }, []);
 
   const handleProfileClick = (profile) => {
     const profileContent = (

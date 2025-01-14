@@ -359,10 +359,99 @@ const ManageCandidate = () => {
   const { candidates, loading, toggleContestantStatus, updateBanPeriod } = useContext(CandidateContext);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activePickerId, setActivePickerId] = useState(null);
+  const [activePickerIndex, setActivePickerIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleToggleChange = (id, currentStatus) => {
-    toggleContestantStatus(id, currentStatus);
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        setLoading(true); // Start loader
+        const response = await fetch(`${serverUrl}allUser`);
+        const data = await response.json();
+
+        const formattedData = data.map((item) => ({
+          name: item.name,
+          email: item.email,
+          profile: 'View Profile',
+          contestant: item.isCandidate,
+          approve: item.isApproved,
+          banCount: item.banCount,
+          banPeriod: item.isBanned ? `Banned until ${item.bannedUntil || 'unknown'}` : 'Not Banned',
+          otp: item.otp,
+          otpExpiresAt: item.otpExpiresAt,
+          isBanned: item.isBanned,
+          bannedUntil: item.bannedUntil,
+          id: item._id,
+          username: item.username,
+          password: item.password,
+          contact: item.contact,
+          address: item.address,
+          facebookUrl: item.facebookUrl,
+          instagramUrl: item.instagramUrl,
+          profilePic: item.profilePic,
+          coverPic: item.coverPic,
+          verified: item.verified,
+          followedEvents: item.followedEvents,
+          experiences: item.experiences,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          version: item.__v,
+        }));
+
+        setToggleStates(formattedData);
+      } catch (error) {
+        console.error('Error fetching candidates:', error);
+      } finally {
+        setLoading(false); // Stop loader
+      }
+    };
+
+    fetchCandidates();
+  }, []);
+
+  const handleToggleChange = async (index, field) => {
+    const id = toggleStates[index].id;
+    try {
+      setLoading(true); // Start loader
+      if (field === 'contestant') {
+        const newValue = !toggleStates[index][field];
+        const response = await axios.put(`${serverUrl}toggleIsCandidate/${id}`, {
+          isCandidate: newValue,
+        });
+        if (response.data.message === 'isCandidate toggled') {
+          setToggleStates((prevState) => {
+            const newState = prevState.map((item, i) =>
+              i === index ? { ...item, [field]: newValue } : item
+            );
+            return newState;
+          });
+        }
+      } else if (field === 'approve') {
+        const newValue = !toggleStates[index][field];
+        const response = await axios.put(`${serverUrl}toggleIsApproved/${id}`, {
+          isApproved: newValue,
+        });
+        if (response.data.message === 'isApproved toggled') {
+          setToggleStates((prevState) => {
+            const newState = prevState.map((item, i) =>
+              i === index ? { ...item, [field]: newValue } : item
+            );
+            return newState;
+          });
+        }
+      } else {
+        setToggleStates((prevState) => {
+          const newState = prevState.map((item, i) =>
+            i === index ? { ...item, [field]: !item[field] } : item
+          );
+          return newState;
+        });
+      }
+    } catch (error) {
+      console.error('Error updating candidate:', error);
+    } finally {
+      setLoading(false); // Stop loader
+    }
   };
 
   const handleViewProfile = (candidate) => {
@@ -513,17 +602,14 @@ const ManageCandidate = () => {
                     onChange={() => handleToggleChange(item.id, item.isCandidate)}
                   />
                 </td>
-                {/* Approve toggle remains commented out */}
-                {/*
-                <td className="py-4 px-4">
+                {/* <td className="py-4 px-4">
                   <input
                     type="checkbox"
                     className="toggle toggle-md checked:bg-orange-500"
                     checked={item.approve}
                     onChange={() => handleToggleChange(item.id, 'approve')}
                   />
-                </td>
-                */}
+                </td> */}
                 <td className="py-4 px-4 relative">
                   <button
                     className=""
