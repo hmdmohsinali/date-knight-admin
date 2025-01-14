@@ -103,8 +103,18 @@ const ManageWinner = () => {
             {events.map((event, index) => (
               <tr key={event.id} className="border-b last:border-b-0">
                 <td className="py-3 px-4 border-r">{event.id.slice(-4)}</td>
-                <td className="py-3 px-4 border-r">{event.votes.challenger}</td>
-                <td className="py-3 px-4 border-r">{event.votes.challengedUser}</td>
+                <td className="py-3 px-4 border-r">
+                  <div className="flex flex-col">
+                    <span className="font-semibold">{event.challenger}</span>
+                    <span>{event.votes.challenger} Votes</span>
+                  </div>
+                </td>
+                <td className="py-3 px-4 border-r">
+                  <div className="flex flex-col">
+                    <span className="font-semibold">{event.opponent}</span>
+                    <span>{event.votes.challengedUser} Votes</span>
+                  </div>
+                </td>
                 <td className="py-3 px-4 border-r">{event.date}</td>
                 <td className="py-3 px-4 border-r">
                   <select
