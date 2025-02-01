@@ -21,14 +21,19 @@ const ManageEvents = () => {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
         console.log(data)
-        const formattedEvents = data.map((event) => ({
+        // Filter out events that already have a dateAllot (i.e., skip them)
+        const unscheduledEvents = data.filter(event => !event.dateAllot);
+        
+        // Map only unscheduled events to your local state
+        const formattedEvents = unscheduledEvents.map(event => ({
           id: event._id,
-          challenger: event.challenger.name,
-          opponent: event.challengedUser.name,
-          date: null,
+          challenger: event.challenger?.name || "N/A",
+          opponent: event.challengedUser?.name || "N/A",
+          date: null, // We'll keep it null because user hasn't selected yet
           time: "",
           approve: event.approve,
         }));
+
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -68,30 +73,6 @@ const ManageEvents = () => {
     } catch (error) {
       console.error("Error updating event approval status:", error);
       toast.error("Error updating event approval status");
-    } finally {
-    }
-  };
-
-  const handleGoLive = async (eventId) => {
-    const event = events.find((e) => e.id === eventId);
-
-    if (!event.approve) {
-      setPopup({
-        show: true,
-        message:
-          "Event is not approved. Please approve the event before going live.",
-      });
-      return;
-    }
-
-    try {
-      const response = await axios.put(`${serverUrl}goLive/${eventId}`);
-      const { message, eventId: id } = response.data;
-      console.log(message, id);
-      toast.success("Event live successfully");
-      setEvents(events.filter((event) => event.id !== id));
-    } catch (error) {
-      console.error("Error going live:", error);
     }
   };
 
@@ -111,13 +92,17 @@ const ManageEvents = () => {
       });
       return;
     }
-  
+
+    // Construct a dateAllot in UTC or local time as needed. 
+    // Below example shows local time version:
+    const [hours, minutes] = event.time.split(":").map(Number);
     const dateAllot = new Date(
-      `${event.date.toISOString().split("T")[0]}T${event.time}:00.000Z`
+      event.date.getFullYear(),
+      event.date.getMonth(),
+      event.date.getDate(),
+      hours,
+      minutes
     );
-  
-    
-    console.log(dateAllot)
 
     try {
       const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
@@ -125,15 +110,13 @@ const ManageEvents = () => {
       });
       const { message, eventId: id } = response.data;
       toast.success("Event scheduled successfully");
-  
-     
-  
-      setEvents(events.filter((event) => event.id !== id));
+
+      // Remove the scheduled event from the local list
+      setEvents(events.filter((ev) => ev.id !== id));
     } catch (error) {
       console.error("Error scheduling event:", error);
     }
   };
-  
 
   const generateTimeOptions = () => {
     const times = [];
@@ -149,7 +132,6 @@ const ManageEvents = () => {
 
   const timeOptions = generateTimeOptions();
 
-
   return (
     <>
       {loading ? (
@@ -163,7 +145,7 @@ const ManageEvents = () => {
             <table className="min-w-full bg-white  text-sm md:text-base">
               <thead>
                 <tr className="bg-[#FFA768]">
-                  <th className="py-2 px-4 text-left font-medium text-white border-b ">
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     ID
                   </th>
                   <th className="py-2 px-4 text-left font-medium text-white border-b">
@@ -267,8 +249,7 @@ const ManageEvents = () => {
 };
 
 ManageEvents.propTypes = {
-  onSchedule: PropTypes.func.isRequired, // This will ensure onSchedule is a function and must be provided
+  onSchedule: PropTypes.func.isRequired,
 };
-
 
 export default ManageEvents;
