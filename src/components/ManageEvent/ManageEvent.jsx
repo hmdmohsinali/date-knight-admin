@@ -9,6 +9,7 @@ import axios from "axios";
 import { serverUrl } from "../../../api";
 import LoaderCircle from "../LoaderCircle/LoaderCircle";
 import { toast } from "react-toastify";
+import { format, setHours, setMinutes } from "date-fns"; // Import date-fns functions
 
 const ManageEvents = () => {
   const [events, setEvents] = useState([]);
@@ -20,7 +21,6 @@ const ManageEvents = () => {
       try {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
-        console.log(data)
         // Filter out events that already have a dateAllot (i.e., skip them)
         const unscheduledEvents = data.filter(event => !event.dateAllot);
         
@@ -93,17 +93,13 @@ const ManageEvents = () => {
       return;
     }
 
-    // Construct a dateAllot in UTC or local time as needed. 
-    // Below example shows local time version:
+    // Construct the dateAllot in local time and convert it to the required format
     const [hours, minutes] = event.time.split(":").map(Number);
-    const dateAllot = new Date(
-      event.date.getFullYear(),
-      event.date.getMonth(),
-      event.date.getDate(),
-      hours,
-      minutes
-    );
+    const localDate = setHours(setMinutes(event.date, minutes), hours);
 
+    // Send the date to the backend in UTC (use toISOString for that)
+    const dateAllot = localDate.toISOString();  // Convert to ISO string for UTC
+    
     try {
       const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
         dateAllot,
