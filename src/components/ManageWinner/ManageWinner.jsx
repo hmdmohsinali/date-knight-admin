@@ -21,6 +21,7 @@ const ManageWinner = () => {
           challenger: event.challenger.trim(), // Remove any extra whitespace
           opponent: event.challengedUser.trim(),
           date: new Date(event.dateAllot).toLocaleDateString(),
+          timeRemaining: event.dateAllot,
           status: event.eventStatus,
           votes: event.votes,
           winner: event.winner || "Tie", // Default to "Tie" if winner is not set
@@ -80,6 +81,26 @@ const ManageWinner = () => {
     }
   };
 
+  const getTimeRemaining = (isoDate) => {
+  const now = new Date();
+  const target = new Date(isoDate);
+  const diff = target - now;
+
+  if (diff <= 0) return "Expired";
+
+  const minutes = Math.floor(diff / 60000) % 60;
+  const hours = Math.floor(diff / 3600000) % 24;
+  const days = Math.floor(diff / 86400000);
+
+  let parts = [];
+  if (days > 0) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? "s" : ""}`);
+  if (minutes > 0 && days === 0) parts.push(`${minutes} minute${minutes > 1 ? "s" : ""}`);
+
+  return parts.length > 0 ? parts.join(" ") + " left" : "Less than a minute left";
+};
+
+
   if (loading) {
     return <LoaderCircle />;
   }
@@ -95,6 +116,7 @@ const ManageWinner = () => {
               <th className="py-3 px-4 text-left font-medium text-white border-b">CHALLENGER VOTES</th>
               <th className="py-3 px-4 text-left font-medium text-white border-b">OPPONENT VOTES</th>
               <th className="py-3 px-4 text-left font-medium text-white border-b">EVENT DATE</th>
+              <th className="py-3 px-4 text-left font-medium text-white border-b">TIME REMAINING</th>
               <th className="py-3 px-4 text-left font-medium text-white border-b">EVENT STATUS</th>
               <th className="py-3 px-4 text-left font-medium text-white border-b">WINNER</th>
             </tr>
@@ -116,6 +138,8 @@ const ManageWinner = () => {
                   </div>
                 </td>
                 <td className="py-3 px-4 border-r">{event.date}</td>
+                {console.log(event,"eventevent")}
+                <td className="py-3 px-4 border-r"> {getTimeRemaining(event.timeRemaining)}</td>
                 <td className="py-3 px-4 border-r">
                   <select
                     value={event.status}

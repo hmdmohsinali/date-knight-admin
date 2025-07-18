@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import "daisyui/dist/full.css";
@@ -15,6 +15,7 @@ const ManageEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [popup, setPopup] = useState({ show: false, message: "" });
+  const [editingTitleIndex, setEditingTitleIndex] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -22,16 +23,17 @@ const ManageEvents = () => {
         const response = await axios.get(`${serverUrl}getEvents`);
         const data = response.data;
         // Filter out events that already have a dateAllot (i.e., skip them)
-        const unscheduledEvents = data.filter(event => !event.dateAllot);
-        
+        const unscheduledEvents = data.filter((event) => !event.dateAllot);
+
         // Map only unscheduled events to your local state
-        const formattedEvents = unscheduledEvents.map(event => ({
+        const formattedEvents = unscheduledEvents.map((event) => ({
           id: event._id,
           challenger: event.challenger?.name || "N/A",
           opponent: event.challengedUser?.name || "N/A",
           date: null, // We'll keep it null because user hasn't selected yet
           time: "",
           approve: event.approve,
+          title: event.title,
         }));
 
         setEvents(formattedEvents);
@@ -48,6 +50,12 @@ const ManageEvents = () => {
   const handleDateChange = (date, index) => {
     const newEvents = [...events];
     newEvents[index].date = date;
+    setEvents(newEvents);
+  };
+
+  const handleTitleChange = (title, index) => {
+    const newEvents = [...events];
+    newEvents[index].title = title;
     setEvents(newEvents);
   };
 
@@ -85,10 +93,18 @@ const ManageEvents = () => {
       });
       return;
     }
+    if (!event.title) {
+      setPopup({
+        show: true,
+        message: "Please eneter event name",
+      });
+      return;
+    }
     if (!event.approve) {
       setPopup({
         show: true,
-        message: "Event is not approved. Please approve the event before scheduling.",
+        message:
+          "Event is not approved. Please approve the event before scheduling.",
       });
       return;
     }
@@ -98,11 +114,12 @@ const ManageEvents = () => {
     const localDate = setHours(setMinutes(event.date, minutes), hours);
 
     // Send the date to the backend in UTC (use toISOString for that)
-    const dateAllot = localDate.toISOString();  // Convert to ISO string for UTC
-    
+    const dateAllot = localDate.toISOString(); // Convert to ISO string for UTC
+    const eventTitle = event.title;
     try {
       const response = await axios.put(`${serverUrl}setDate/${eventId}`, {
         dateAllot,
+        title: eventTitle,
       });
       const { message, eventId: id } = response.data;
       toast.success("Event scheduled successfully");
@@ -151,6 +168,9 @@ const ManageEvents = () => {
                     OPPONENT
                   </th>
                   <th className="py-2 px-4 text-left font-medium text-white border-b">
+                    EVENT NAME
+                  </th>
+                  <th className="py-2 px-4 text-left font-medium text-white border-b">
                     EVENT DATE
                   </th>
                   <th className="py-2 px-4 text-left font-medium text-white border-b">
@@ -170,6 +190,33 @@ const ManageEvents = () => {
                     <td className="py-2 px-4 border-r">{event.id.slice(-4)}</td>
                     <td className="py-2 px-4 border-r">{event.challenger}</td>
                     <td className="py-2 px-4 border-r">{event.opponent}</td>
+                    <td className="py-2 px-4 border-r">
+                      {editingTitleIndex === index ? (
+                        <input
+                          type="text"
+                          placeholder="Enter Title"
+                          value={event.title || ""}
+                          onChange={(e) =>
+                            handleTitleChange(e.target.value, index)
+                          }
+                          onBlur={() => setEditingTitleIndex(null)} // Finish editing on blur
+                          autoFocus
+                          className="outline-none border border-gray-300 rounded px-2 py-1 w-full"
+                        />
+                      ) : (
+                        <span
+                          className="cursor-pointer text-gray-700"
+                          onClick={() => setEditingTitleIndex(index)}
+                        >
+                          {event.title || (
+                            <span className="text-gray-400 italic">
+                              Click to enter
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </td>
+
                     <td className="py-2 px-4 border-r">
                       <div className="flex items-center justify-center">
                         <FaRegCalendarAlt className="mr-2 text-orange-500" />
